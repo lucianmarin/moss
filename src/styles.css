@@ -75,7 +75,9 @@ button {
   left: 0;
   right: 0;
   height: 36px;
-  background: #d9d9d9;
+  background: rgba(217, 217, 217, 0.8);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -300,7 +302,9 @@ button {
   top: 50%;
   transform: translateY(-50%);
   width: 48px;
-  background: #e1e1e1;
+  background: rgba(217, 217, 217, 0.8);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   border-radius: 8px;
   padding: 12px 0 10px;
   display: flex;
@@ -385,22 +389,33 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   padding-top: 4px;
 }
 
 .moss-dock-utility-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 18px 18px;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
+  justify-items: center;
+  column-gap: 4px;
 }
 
 .moss-dock-util-btn {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: #333;
-  padding: 2px;
   border-radius: 4px;
-  opacity: 0.75;
+  opacity: 0.78;
+  line-height: 1;
+}
+
+.moss-dock-util-btn svg {
+  display: block;
 }
 
 .moss-dock-util-btn:hover,
@@ -410,27 +425,34 @@ button {
 }
 
 .moss-dock-clock-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 18px 18px;
   align-items: center;
-  justify-content: center;
-  gap: 5px;
+  justify-items: center;
+  column-gap: 4px;
 }
 
 .moss-dock-vertical-clock {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   line-height: 1.05;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 800;
   color: #000;
   cursor: pointer;
 }
 
 .moss-dock-more-btn {
-  display: flex;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 2.5px;
-  padding: 3px;
+  padding: 0;
 }
 
 .moss-dock-more-btn span {
@@ -2638,8 +2660,10 @@ button {
 .moss-overview-container {
   width: 100%;
   max-width: 860px;
-  background: rgba(242, 242, 244, 0.96);
-  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #b7b9bb;
+  border-radius: 7px;
+  overflow: hidden;
   padding: 24px;
   box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
 }
@@ -2648,36 +2672,46 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-bottom: 16px;
   margin-bottom: 18px;
+  border-bottom: 1px solid #d2d4d6;
 }
 
 .moss-overview-header h2 {
   font-size: 19px;
-  color: #111;
+  color: #222222;
 }
 
 .moss-overview-header p {
   font-size: 12.5px;
-  color: #666;
+  color: #676a6c;
 }
 
 .moss-overview-presets {
   display: flex;
-  gap: 6px;
+  gap: 0;
 }
 
 .moss-overview-presets button {
-  padding: 6px 11px;
-  border-radius: 6px;
-  background: #e2e2e2;
-  font-size: 12px;
-  font-weight: 600;
-  color: #222;
+  padding: 9px 14px;
+  border-radius: 0;
+  background: #8c8f91;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #dcdcdc;
+  border-right: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.moss-overview-presets button:hover {
+  background: #676a6c;
+  color: #ffffff;
 }
 
 .moss-overview-presets button.is-active {
-  background: #0c92ff;
-  color: #fff;
+  background: #535659;
+  color: #ffffff;
+  font-weight: 600;
+  border-bottom: 3px solid #0088cc;
 }
 
 .moss-overview-grid {
@@ -2687,47 +2721,67 @@ button {
 }
 
 .moss-overview-card {
-  border-radius: 8px;
+  border-radius: 0;
   overflow: hidden;
-  background: #fff;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  border: 1px solid #b7b9bb;
   text-align: left;
-  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.15s ease;
 }
 
 .moss-overview-card:hover {
-  transform: translateY(-4px) scale(1.02);
+  transform: translateY(-2px);
+  border-color: #0088cc;
 }
 
 .moss-overview-card-top {
-  height: 36px;
+  height: 38px;
   padding: 0 12px;
-  color: #fff;
+  background: #8c8f91;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
+  border-bottom: 3px solid #b7b9bb;
+}
+
+.moss-overview-card.status-open .moss-overview-card-top {
+  background: #535659;
+  border-bottom: 3px solid #0088cc;
 }
 
 .moss-overview-badge {
   font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.22);
-  padding: 2px 6px;
-  border-radius: 4px;
+  background: #b9dcf2;
+  color: #005f8f;
+  padding: 3px 7px;
+  border-radius: 0;
+}
+
+.moss-overview-card.status-open .moss-overview-badge {
+  background: #0088cc;
+  color: #ffffff;
 }
 
 .moss-overview-card-body {
   padding: 12px;
+  background: #d2d4d6;
   display: flex;
   flex-direction: column;
   gap: 4px;
   font-size: 12.5px;
-  color: #222;
+  color: #222222;
+}
+
+.moss-overview-card.status-open .moss-overview-card-body {
+  background: #ffffff;
 }
 
 .moss-overview-card-body span {
   font-size: 11.5px;
-  color: #777;
+  color: #535659;
 }

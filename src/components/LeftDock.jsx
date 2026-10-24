@@ -104,7 +104,7 @@ export default function LeftDock() {
               }}
               title={`Volume (${volume}%)`}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
                 {volume > 0 && <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />}
                 {volume === 0 && <line x1="22" y1="9" x2="16" y2="15" />}
@@ -141,7 +141,7 @@ export default function LeftDock() {
             }}
             title="Notifications & Activity"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
               <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>
@@ -154,14 +154,14 @@ export default function LeftDock() {
             onClick={() => setOverviewOpen(false)}
             title="Pointer / Canvas Focus Mode"
           >
-            <CursorArrowIcon size={14} />
+            <CursorArrowIcon size={15} />
           </button>
           <button
             className={`moss-dock-util-btn ${overviewOpen ? 'is-active' : ''}`}
             onClick={() => setOverviewOpen((v) => !v)}
             title="Spatial Layer Overview"
           >
-            <LayersStackIcon size={14} />
+            <LayersStackIcon size={15} />
           </button>
         </div>
 

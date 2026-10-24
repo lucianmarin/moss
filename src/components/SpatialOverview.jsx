@@ -49,10 +49,7 @@ export default function SpatialOverview() {
                 className={`moss-overview-card status-${win?.status}`}
                 onClick={() => openWindow(appId, { source: 'switcher' })}
               >
-                <div
-                  className="moss-overview-card-top"
-                  style={{ background: def.brandColor }}
-                >
+                <div className="moss-overview-card-top">
                   <span>{def.title}</span>
                   <span className="moss-overview-badge">{win?.status}</span>
                 </div>
