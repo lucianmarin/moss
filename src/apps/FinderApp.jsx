@@ -56,17 +56,6 @@ export default function FinderApp() {
               _
             </button>
             <button
-              className="moss-code-plusminus"
-              onClick={() => {
-                const idx = finderTabs.findIndex((t) => t.id === activeTab);
-                const next = finderTabs[(idx + 1) % finderTabs.length];
-                setWindowTab('finder', next.id);
-              }}
-              title="Next Folder Tab (+)"
-            >
-              +
-            </button>
-            <button
               className={`moss-code-blue-btn ${menuOpen ? 'is-open' : ''}`}
               onClick={() => setMenuOpen((v) => !v)}
               title="Finder Menu (New, Share, Settings, Quit)"

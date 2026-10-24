@@ -57,17 +57,6 @@ export default function SettingsApp() {
               _
             </button>
             <button
-              className="moss-code-plusminus"
-              onClick={() => {
-                const idx = settingsTabs.indexOf(activeTab);
-                const next = settingsTabs[(idx + 1) % settingsTabs.length];
-                setWindowTab('settings', next);
-              }}
-              title="Next Settings Tab (+)"
-            >
-              +
-            </button>
-            <button
               className={`moss-code-blue-btn ${menuOpen ? 'is-open' : ''}`}
               onClick={() => setMenuOpen((v) => !v)}
               title="Settings Menu (New, Share, Settings, Quit)"
