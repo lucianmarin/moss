@@ -2387,6 +2387,14 @@ button {
   gap: 8px;
 }
 
+.moss-notifications-popover.moss-dock-notifications-popover {
+  position: absolute;
+  top: auto;
+  right: auto;
+  left: 54px;
+  bottom: 0;
+}
+
 .moss-notif-header {
   display: flex;
   justify-content: space-between;
