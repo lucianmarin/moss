@@ -1,6 +1,30 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useOS } from '../context/OSContext';
 
+const SNAP_THRESHOLD = 14;
+
+function getWorkspaceBounds(shellMode, winWidth, winHeight) {
+  let minX = 0;
+  let minY = 0;
+  const maxRight = window.innerWidth;
+  let maxBottom = window.innerHeight;
+
+  if (shellMode === 'advanced') {
+    const topbarEl = document.querySelector('.moss-topbar');
+    minY = topbarEl ? Math.round(topbarEl.getBoundingClientRect().bottom) : 36;
+  } else if (shellMode === 'basic') {
+    const dockEl = document.querySelector('.moss-v2-left-dock');
+    minX = dockEl ? Math.round(dockEl.getBoundingClientRect().right) : 54;
+  } else if (shellMode === 'v1-classic') {
+    maxBottom = window.innerHeight - 42;
+  }
+
+  const maxX = Math.max(minX, maxRight - winWidth);
+  const maxY = Math.max(minY, maxBottom - winHeight);
+
+  return { minX, minY, maxX, maxY, maxRight, maxBottom };
+}
+
 export default function WindowFrame({
   appId,
   children,
@@ -13,6 +37,7 @@ export default function WindowFrame({
   const {
     windows,
     focusedApp,
+    shellMode,
     animationStyle,
     focusWindow,
     updateWindowRect
@@ -23,14 +48,39 @@ export default function WindowFrame({
 
   const [isDragging, setIsDragging] = useState(false);
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
+  const wrapperRef = useRef(null);
   const dragStateRef = useRef(null);
   const resizeStateRef = useRef(null);
+  const tiltResetTimerRef = useRef(null);
 
   useEffect(() => {
     if (!isDragging) {
       setTilt({ rx: 0, ry: 0 });
     }
   }, [isDragging]);
+
+  useEffect(() => {
+    return () => {
+      if (tiltResetTimerRef.current) {
+        clearTimeout(tiltResetTimerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!win || win.status !== 'open') return;
+    const el = wrapperRef.current;
+    const winW = el ? el.offsetWidth : win.rect.width;
+    const winH = el ? el.offsetHeight : win.rect.height;
+    const { minX, minY, maxX, maxY } = getWorkspaceBounds(shellMode, winW, winH);
+
+    const clampedX = Math.max(minX, Math.min(maxX, win.rect.x));
+    const clampedY = Math.max(minY, Math.min(maxY, win.rect.y));
+
+    if (clampedX !== win.rect.x || clampedY !== win.rect.y) {
+      updateWindowRect(appId, { x: clampedX, y: clampedY });
+    }
+  }, [shellMode, appId, win?.status, win?.rect.x, win?.rect.y, win?.rect.width, win?.rect.height, updateWindowRect]);
 
   if (!win || win.status === 'closed' || win.status === 'minimized') {
     return null;
@@ -44,35 +94,98 @@ export default function WindowFrame({
     focusWindow(appId);
     setIsDragging(true);
 
+    const el = wrapperRef.current;
+    const winW = el ? el.offsetWidth : win.rect.width;
+    const winH = el ? el.offsetHeight : win.rect.height;
+
     dragStateRef.current = {
-      startX: e.clientX,
-      startY: e.clientY,
+      grabOffsetX: e.clientX - win.rect.x,
+      grabOffsetY: e.clientY - win.rect.y,
       lastX: e.clientX,
       lastY: e.clientY,
-      origX: win.rect.x,
-      origY: win.rect.y
+      winW,
+      winH
     };
 
     const handleMouseMove = (moveEvent) => {
       if (!dragStateRef.current) return;
-      const dx = moveEvent.clientX - dragStateRef.current.startX;
-      const dy = moveEvent.clientY - dragStateRef.current.startY;
       const vx = moveEvent.clientX - dragStateRef.current.lastX;
       const vy = moveEvent.clientY - dragStateRef.current.lastY;
       dragStateRef.current.lastX = moveEvent.clientX;
       dragStateRef.current.lastY = moveEvent.clientY;
 
-      const clampedY = Math.max(36, Math.min(window.innerHeight - 60, dragStateRef.current.origY + dy));
-      const clampedX = Math.max(12, Math.min(window.innerWidth - 120, dragStateRef.current.origX + dx));
+      const currentEl = wrapperRef.current;
+      const currentW = currentEl ? currentEl.offsetWidth : dragStateRef.current.winW;
+      const currentH = currentEl ? currentEl.offsetHeight : dragStateRef.current.winH;
 
-      updateWindowRect(appId, { x: clampedX, y: clampedY });
-      setTilt({
-        rx: Math.max(-7, Math.min(7, -vy * 0.28)),
-        ry: Math.max(-9, Math.min(9, vx * 0.32))
-      });
+      const { minX, minY, maxX, maxY } = getWorkspaceBounds(
+        shellMode,
+        currentW,
+        currentH
+      );
+
+      let rawX = moveEvent.clientX - dragStateRef.current.grabOffsetX;
+      let rawY = moveEvent.clientY - dragStateRef.current.grabOffsetY;
+
+      if (rawX < minX) {
+        rawX = minX;
+        dragStateRef.current.grabOffsetX = moveEvent.clientX - minX;
+      } else if (rawX > maxX) {
+        rawX = maxX;
+        dragStateRef.current.grabOffsetX = moveEvent.clientX - maxX;
+      }
+
+      if (rawY < minY) {
+        rawY = minY;
+        dragStateRef.current.grabOffsetY = moveEvent.clientY - minY;
+      } else if (rawY > maxY) {
+        rawY = maxY;
+        dragStateRef.current.grabOffsetY = moveEvent.clientY - maxY;
+      }
+
+      let stickyX = rawX;
+      if (Math.abs(rawX - minX) <= SNAP_THRESHOLD) {
+        stickyX = minX;
+      } else if (Math.abs(rawX - maxX) <= SNAP_THRESHOLD) {
+        stickyX = maxX;
+      }
+
+      let stickyY = rawY;
+      if (Math.abs(rawY - minY) <= SNAP_THRESHOLD) {
+        stickyY = minY;
+      } else if (Math.abs(rawY - maxY) <= SNAP_THRESHOLD) {
+        stickyY = maxY;
+      }
+
+      const isStuckAtEdge =
+        stickyX === minX ||
+        stickyX === maxX ||
+        stickyY === minY ||
+        stickyY === maxY;
+
+      updateWindowRect(appId, { x: stickyX, y: stickyY });
+
+      if (tiltResetTimerRef.current) {
+        clearTimeout(tiltResetTimerRef.current);
+      }
+
+      if (isStuckAtEdge) {
+        setTilt({ rx: 0, ry: 0 });
+      } else {
+        setTilt({
+          rx: Math.max(-7, Math.min(7, -vy * 0.28)),
+          ry: Math.max(-9, Math.min(9, vx * 0.32))
+        });
+        tiltResetTimerRef.current = setTimeout(() => {
+          setTilt({ rx: 0, ry: 0 });
+        }, 70);
+      }
     };
 
     const handleMouseUp = () => {
+      if (tiltResetTimerRef.current) {
+        clearTimeout(tiltResetTimerRef.current);
+      }
       dragStateRef.current = null;
       setIsDragging(false);
       setTilt({ rx: 0, ry: 0 });
@@ -93,16 +206,43 @@ export default function WindowFrame({
       startX: e.clientX,
       startY: e.clientY,
       origW: win.rect.width,
-      origH: win.rect.height
+      origH: win.rect.height,
+      origX: win.rect.x,
+      origY: win.rect.y
     };
 
     const handleMouseMove = (moveEvent) => {
       if (!resizeStateRef.current) return;
       const dw = moveEvent.clientX - resizeStateRef.current.startX;
       const dh = moveEvent.clientY - resizeStateRef.current.startY;
+      const { maxRight, maxBottom } = getWorkspaceBounds(
+        shellMode,
+        resizeStateRef.current.origW,
+        resizeStateRef.current.origH
+      );
+
+      const maxAllowedW = Math.max(minWidth, maxRight - resizeStateRef.current.origX);
+      const maxAllowedH = Math.max(minHeight, maxBottom - resizeStateRef.current.origY);
+
+      let nextW = Math.max(
+        minWidth,
+        Math.min(maxAllowedW, resizeStateRef.current.origW + dw)
+      );
+      let nextH = Math.max(
+        minHeight,
+        Math.min(maxAllowedH, resizeStateRef.current.origH + dh)
+      );
+
+      if (Math.abs(maxAllowedW - nextW) <= SNAP_THRESHOLD) {
+        nextW = maxAllowedW;
+      }
+      if (Math.abs(maxAllowedH - nextH) <= SNAP_THRESHOLD) {
+        nextH = maxAllowedH;
+      }
+
       updateWindowRect(appId, {
-        width: Math.max(minWidth, resizeStateRef.current.origW + dw),
-        height: Math.max(minHeight, resizeStateRef.current.origH + dh)
+        width: nextW,
+        height: nextH
       });
     };
 
@@ -123,6 +263,7 @@ export default function WindowFrame({
 
   return (
     <div
+      ref={wrapperRef}
       className={`moss-window-wrapper ${isFocused ? 'is-focused' : 'is-unfocused'} ${isDragging ? 'is-dragging' : ''} ${animClass} ${className}`}
       style={{
         left: `${win.rect.x}px`,
