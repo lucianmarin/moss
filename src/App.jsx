@@ -16,6 +16,7 @@ function DesktopEnvironment() {
   const {
     wallpaper,
     shellMode,
+    isMobile,
     setOverviewOpen,
     setNotificationsOpen,
     setSwitcherOpen
@@ -34,7 +35,7 @@ function DesktopEnvironment() {
   }, [setOverviewOpen, setNotificationsOpen, setSwitcherOpen]);
 
   return (
-    <main className={`moss-desktop wallpaper-${wallpaper} mode-${shellMode}`}>
+    <main className={`moss-desktop wallpaper-${wallpaper} mode-${shellMode} ${isMobile ? 'is-mobile' : ''}`}>
       {/* V2 Top System Bar & Top-Left Switcher Stack */}
       <TopBar />
 

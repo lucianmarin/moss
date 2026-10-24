@@ -109,7 +109,7 @@ export default function TopBar() {
             <button
               type="button"
               className={`moss-bolt-icon-static moss-bolt-btn ${searchOpen ? 'is-active' : ''}`}
-              title="Moss OS — Search Apps"
+              title="Moss — Search Apps"
               onClick={() => {
                 setSearchOpen((v) => !v);
                 setSwitcherOpen(false);

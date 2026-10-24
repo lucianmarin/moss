@@ -182,7 +182,7 @@ export const INITIAL_CODE_FILES = [
     name: 'machine.py',
     shortName: 'machn.py',
     language: 'python',
-    content: `# Moss OS State Machine & Window Spatial Engine
+    content: `# Moss State Machine & Window Spatial Engine
 class MossMachine:
     def __init__(self, mode="v2-hybrid"):
         self.mode = mode

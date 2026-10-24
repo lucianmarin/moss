@@ -59,7 +59,7 @@ const INITIAL_CONVERSATIONS = {
 const CONTACTS_LIST = [
   { name: 'Mike', role: 'Product & Systems Design', status: 'Online', avatar: AVATAR_WOMAN },
   { name: 'Trisha', role: 'HCI Research Lead', status: 'Listening to Chilltrax', avatar: AVATAR_TRISHA },
-  { name: 'Lucian Marin', role: 'Creator of Moss OS', status: 'Designing V2', avatar: AVATAR_MAN }
+  { name: 'Lucian Marin', role: 'Creator of Moss', status: 'Designing V2', avatar: AVATAR_MAN }
 ];
 
 export default function WhatsAppApp() {
@@ -110,7 +110,7 @@ export default function WhatsAppApp() {
       const replies = [
         'Love how clean the vertical 90-degree rail tabs look in WhatsApp.',
         'The V1 vertical rail keeps all conversation names right along the left edge.',
-        'That interaction is super smooth — pure Moss OS minimalism!'
+        'That interaction is super smooth — pure Moss minimalism!'
       ];
       const replyText = replies[Math.floor(Math.random() * replies.length)];
       setConversations((prev) => ({

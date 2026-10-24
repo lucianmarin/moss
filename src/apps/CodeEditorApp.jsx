@@ -20,7 +20,7 @@ export default function CodeEditorApp() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [livePreview, setLivePreview] = useState(false);
   const [sampleInput, setSampleInput] = useState(
-    'Moss OS blends V2 shell ergonomics with V1 window design.'
+    'Moss blends V2 shell ergonomics with V1 window design.'
   );
   const [compactNames, setCompactNames] = useState(false);
 
@@ -43,7 +43,7 @@ export default function CodeEditorApp() {
         name: newId,
         shortName: newId,
         language: 'js',
-        content: `// Moss OS Interaction Script\nconst windowSpring = { stiffness: 360, damping: 28 };\nconsole.log("Ready:", windowSpring);`
+        content: `// Moss Interaction Script\nconst windowSpring = { stiffness: 360, damping: 28 };\nconsole.log("Ready:", windowSpring);`
       }
     ]);
     setWindowTab('code', newId);

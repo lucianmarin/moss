@@ -1,4 +1,4 @@
-# Moss OS
+# Moss
 **Experimental Operating System UI/UX Design & Human–Computer Interaction Prototype**
 
 Moss is a next-generation desktop operating system concept designed by Lucian Marin. It reimagines how windows, navigation chrome, system docks, and ambient media coexist on a clutter-free spatial canvas. Built with **React** and **Vite**, this interactive environment unifies the **Moss V2** design language (primary experience) with all iconic applications and HUD paradigms from **Moss V1**.
@@ -40,7 +40,7 @@ Moss is a next-generation desktop operating system concept designed by Lucian Ma
 | **Finder (Files)** | `moss-v2-switcher.png` | Browse `/design` (inspect original V1 & V2 mockups inside the OS), `music/` (launch the Chilltrax stream `https://streamssleu.chilltrax.com/stream?sid=1` directly in the Media Player), and `/code` (open `count.html`, `machine.py`, `rss.xml` in the Code Editor). |
 | **Settings** | `moss-v2-switcher.png` | Customize Shell Mode (`V2 Complete`, `V2 Dock Only`, `V2 Switcher Only`, `V1 Classic Mountain`), Desktop Surface (`V2 Neutral Gray #808080`, `V1 Alpine Mist`, `Dark Obsidian`, `Warm Stone`), Animation Physics (`Spring Morph`, `Genie Fold`, `Crisp`), and System Audio Volume. |
 
-### V1 Applications (Unified into Moss OS)
+### V1 Applications (Unified into Moss)
 | Application | Design Source | Key Interactive Features |
 | :--- | :--- | :--- |
 | **Moss Media Player** | `moss-v1-player.jpg`, `https://streamssleu.chilltrax.com/stream?sid=1` | Ultra-minimal horizontal bar widget (`[Album Art] [★ Artist + Title + Progress] [Track # / Time]`). Powered by HTML5 Audio streaming `https://streamssleu.chilltrax.com/stream?sid=1` alongside V1 track skins (*Castanets — No Voice Was Raised*, *Caribou — Jamelia*, *Chilltrax Live*). Includes interactive progress scrubbing, star favorites, track cycling, and color-adaptive themes (`#4d2608` + `#b9dcf2` blue badge, `#0d131a` + `#ecc118` gold badge). |

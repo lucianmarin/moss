@@ -71,7 +71,7 @@ const INITIAL_WINDOWS = {
     status: 'open',
     animPhase: 'idle',
     animVector: { dx: -60, dy: -40 },
-    zIndex: 24,
+    zIndex: 27,
     rect: { x: 76, y: 250, width: 575, height: 415 },
     activeTab: 'News'
   },
@@ -142,6 +142,17 @@ export function OSProvider({ children }) {
   const [overviewOpen, setOverviewOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [showDualPlayer, setShowDualPlayer] = useState(false);
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth <= 639 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 639);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Shared Code Editor files so Finder can open files directly into Code Editor
   const [codeFiles, setCodeFiles] = useState(INITIAL_CODE_FILES);
@@ -309,8 +320,13 @@ export function OSProvider({ children }) {
   // Compute origin delta vector from DOM trigger (Switcher stack card or Dock icon) to window center
   const computeOriginVector = useCallback((appId, winRect, preferSource = 'auto') => {
     if (typeof document === 'undefined') return { dx: -160, dy: -120 };
-    const winCenterX = winRect.x + winRect.width / 2;
-    const winCenterY = winRect.y + winRect.height / 2;
+    const mobileView = typeof window !== 'undefined' && window.innerWidth <= 639;
+    const winCenterX = mobileView ? window.innerWidth / 2 : winRect.x + winRect.width / 2;
+    const winCenterY = mobileView
+      ? appId === 'player'
+        ? 46
+        : window.innerHeight / 2
+      : winRect.y + winRect.height / 2;
 
     const switcherEl = document.querySelector(`[data-switcher-item="${appId}"]`);
     const switcherTriggerEl = document.querySelector('[data-app-switcher-trigger="true"]');
@@ -545,6 +561,7 @@ export function OSProvider({ children }) {
     setNotificationsOpen,
     showDualPlayer,
     setShowDualPlayer,
+    isMobile,
     codeFiles,
     setCodeFiles,
     tracks,

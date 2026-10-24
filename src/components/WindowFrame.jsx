@@ -38,6 +38,7 @@ export default function WindowFrame({
     windows,
     focusedApp,
     shellMode,
+    isMobile,
     animationStyle,
     focusWindow,
     updateWindowRect
@@ -68,6 +69,7 @@ export default function WindowFrame({
   }, []);
 
   useEffect(() => {
+    if (isMobile) return;
     if (!win || win.status !== 'open') return;
     const el = wrapperRef.current;
     const winW = el ? el.offsetWidth : win.rect.width;
@@ -80,7 +82,7 @@ export default function WindowFrame({
     if (clampedX !== win.rect.x || clampedY !== win.rect.y) {
       updateWindowRect(appId, { x: clampedX, y: clampedY });
     }
-  }, [shellMode, appId, win?.status, win?.rect.x, win?.rect.y, win?.rect.width, win?.rect.height, updateWindowRect]);
+  }, [isMobile, shellMode, appId, win?.status, win?.rect.x, win?.rect.y, win?.rect.width, win?.rect.height, updateWindowRect]);
 
   if (!win || win.status === 'closed' || win.status === 'minimized') {
     return null;
@@ -90,8 +92,11 @@ export default function WindowFrame({
     if (e.target.closest('button, input, a, select, textarea, [data-no-drag="true"]')) {
       return;
     }
-    e.preventDefault();
     focusWindow(appId);
+    if (isMobile) {
+      return;
+    }
+    e.preventDefault();
     setIsDragging(true);
 
     const el = wrapperRef.current;
@@ -198,6 +203,7 @@ export default function WindowFrame({
   };
 
   const handleResizeMouseDown = (e) => {
+    if (isMobile) return;
     e.stopPropagation();
     e.preventDefault();
     focusWindow(appId);
@@ -261,11 +267,30 @@ export default function WindowFrame({
       ? `moss-win-${win.animPhase} anim-style-${animationStyle}`
       : '';
 
-  return (
-    <div
-      ref={wrapperRef}
-      className={`moss-window-wrapper ${isFocused ? 'is-focused' : 'is-unfocused'} ${isDragging ? 'is-dragging' : ''} ${animClass} ${className}`}
-      style={{
+  const isPlayer = appId === 'player';
+  const lastRunningFullscreenApp = Object.values(windows)
+    .filter((w) => w.id !== 'player' && w.status === 'open')
+    .sort((a, b) => b.zIndex - a.zIndex)[0]?.id;
+
+  const isVisibleOnMobile =
+    isPlayer ||
+    appId === lastRunningFullscreenApp ||
+    win.animPhase === 'minimizing' ||
+    win.animPhase === 'closing';
+
+  const windowStyle = isMobile
+    ? {
+        left: '0px',
+        top: '0px',
+        width: shellMode === 'basic' ? 'calc(100% - 54px)' : '100%',
+        height: isPlayer ? 'auto' : shellMode === 'advanced' ? 'calc(100% - 36px)' : '100%',
+        zIndex: win.zIndex,
+        '--origin-dx': `${win.animVector?.dx || -140}px`,
+        '--origin-dy': `${win.animVector?.dy || -90}px`,
+        '--drag-rx': '0deg',
+        '--drag-ry': '0deg'
+      }
+    : {
         left: `${win.rect.x}px`,
         top: `${win.rect.y}px`,
         width: `${win.rect.width}px`,
@@ -275,7 +300,13 @@ export default function WindowFrame({
         '--origin-dy': `${win.animVector?.dy || -90}px`,
         '--drag-rx': `${tilt.rx}deg`,
         '--drag-ry': `${tilt.ry}deg`
-      }}
+      };
+
+  return (
+    <div
+      ref={wrapperRef}
+      className={`moss-window-wrapper ${isFocused ? 'is-focused' : 'is-unfocused'} ${!isVisibleOnMobile ? 'is-mobile-hidden' : ''} ${isDragging ? 'is-dragging' : ''} ${animClass} ${className}`}
+      style={windowStyle}
       onMouseDown={() => {
         if (
           document.activeElement instanceof HTMLIFrameElement &&
@@ -291,7 +322,7 @@ export default function WindowFrame({
         onMouseDown={handleHeaderMouseDown}
       >
         {children}
-        {resizable && (
+        {resizable && !isMobile && (
           <div
             className="moss-resize-handle"
             onMouseDown={handleResizeMouseDown}
