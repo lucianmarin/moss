@@ -47,7 +47,7 @@ export const APP_DEFINITIONS = {
     title: 'Twitter',
     brandColor: '#6e6e6e',
     menus: ['File', 'Timeline', 'Mentions', 'Trends', 'Window', 'Help'],
-    defaultRect: { x: 875, y: 66, width: 320, height: 305 }
+    defaultRect: { x: 875, y: 66, width: 320, height: 381 }
   },
   finder: {
     id: 'finder',
@@ -73,7 +73,7 @@ const INITIAL_WINDOWS = {
     animVector: { dx: -60, dy: -40 },
     zIndex: 24,
     rect: { x: 76, y: 250, width: 575, height: 415 },
-    activeTab: 'YouTube'
+    activeTab: 'News'
   },
   whatsapp: {
     id: 'whatsapp',
@@ -108,7 +108,7 @@ const INITIAL_WINDOWS = {
     animPhase: 'idle',
     animVector: { dx: -520, dy: -90 },
     zIndex: 23,
-    rect: { x: 650, y: 58, width: 320, height: 240 },
+    rect: { x: 650, y: 58, width: 320, height: 300 },
     activeTab: 'timeline'
   },
   settings: {
