@@ -160,9 +160,12 @@ export default function FinderApp() {
                   <div key={tr.id} className="moss-finder-track-card">
                     <div
                       className="moss-finder-track-swatch"
-                      style={{ background: tr.theme.bg }}
+                      style={{
+                        background: idx % 2 === 0 ? '#0088cc' : '#b9dcf2',
+                        color: idx % 2 === 0 ? '#ffffff' : '#005f8f'
+                      }}
                     >
-                      <span style={{ color: tr.theme.badgeBg }}>▶</span>
+                      <span>▶</span>
                     </div>
                     <div className="moss-finder-track-info">
                       <strong>
@@ -194,10 +197,16 @@ export default function FinderApp() {
                 <span>Click any file to open in the Code Editor</span>
               </div>
               <div className="moss-finder-track-grid">
-                {codeFiles.map((file) => (
+                {codeFiles.map((file, idx) => (
                   <div key={file.id} className="moss-finder-track-card">
-                    <div className="moss-finder-track-swatch" style={{ background: '#0c92ff' }}>
-                      <span style={{ color: '#fff', fontSize: '12px', fontWeight: 700 }}>
+                    <div
+                      className="moss-finder-track-swatch"
+                      style={{
+                        background: idx % 2 === 0 ? '#005f8f' : '#0088cc',
+                        color: '#ffffff'
+                      }}
+                    >
+                      <span style={{ fontSize: '11px', fontWeight: 700 }}>
                         {file.language.toUpperCase()}
                       </span>
                     </div>

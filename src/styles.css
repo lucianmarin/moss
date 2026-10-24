@@ -2061,7 +2061,7 @@ button {
 }
 
 /* =========================================================================
-   11. FINDER & SETTINGS APPS
+   11. FINDER & SETTINGS APPS (Square rectangular V1 UI: gray, silver, blue, white)
    ========================================================================= */
 .moss-finder-window,
 .moss-settings-window {
@@ -2076,6 +2076,7 @@ button {
 .moss-settings-body {
   flex: 1;
   overflow-y: auto;
+  background: #ffffff;
 }
 
 .moss-finder-split {
@@ -2085,12 +2086,11 @@ button {
 
 .moss-finder-file-list {
   width: 215px;
-  background: #f4f5f7;
-  border-right: 1px solid #e4e6ea;
-  padding: 8px;
+  background: #d2d4d6;
+  border-right: 1px solid #b7b9bb;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 3px;
   overflow-y: auto;
 }
 
@@ -2098,38 +2098,52 @@ button {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 10px;
-  border-radius: 6px;
+  padding: 10px 12px;
+  border-radius: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.45);
+  background: #d2d4d6;
   text-align: left;
   font-size: 12.5px;
-  color: #222;
+  color: #333333;
+}
+
+.moss-finder-row:hover {
+  background: #c4c7ca;
 }
 
 .moss-finder-row.is-selected {
-  background: #0c92ff;
-  color: #fff;
+  background: #0088cc;
+  color: #ffffff;
 }
 
 .moss-era-tag {
   font-size: 10px;
   font-weight: 700;
-  padding: 2px 5px;
-  border-radius: 4px;
-  background: rgba(0, 0, 0, 0.1);
+  padding: 2px 6px;
+  border-radius: 0;
+  background: #535659;
+  color: #ffffff;
+}
+
+.moss-finder-row.is-selected .moss-era-tag {
+  background: #005f8f;
+  color: #b9dcf2;
 }
 
 .moss-finder-preview {
   flex: 1;
-  padding: 14px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   overflow-y: auto;
+  background: #ffffff;
 }
 
 .moss-finder-preview-img-wrap {
-  background: #1e2024;
-  border-radius: 6px;
+  background: #535659;
+  border: 1px solid #b7b9bb;
+  border-radius: 0;
   padding: 8px;
   display: flex;
   justify-content: center;
@@ -2140,17 +2154,17 @@ button {
   max-width: 100%;
   max-height: 204px;
   object-fit: contain;
-  border-radius: 4px;
+  border-radius: 0;
 }
 
 .moss-finder-preview-meta h3 {
   font-size: 14.5px;
-  color: #111;
+  color: #222222;
 }
 
 .moss-finder-preview-meta p {
   font-size: 12.5px;
-  color: #555;
+  color: #535659;
   margin-top: 3px;
   line-height: 1.4;
 }
@@ -2158,29 +2172,33 @@ button {
 .moss-finder-meta-tags {
   display: flex;
   gap: 8px;
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .moss-finder-meta-tags span {
   font-size: 11px;
-  background: #efefef;
-  padding: 3px 8px;
-  border-radius: 4px;
-  color: #444;
+  background: #b9dcf2;
+  padding: 4px 9px;
+  border-radius: 0;
+  color: #005f8f;
+  font-weight: 600;
 }
 
 .moss-finder-music-pane {
   padding: 16px;
+  background: #ffffff;
 }
 
 .moss-finder-music-banner {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f4f6f8;
+  background: #d2d4d6;
+  border-left: 4px solid #0088cc;
   padding: 10px 14px;
-  border-radius: 6px;
+  border-radius: 0;
   font-size: 12px;
+  color: #222222;
   margin-bottom: 12px;
 }
 
@@ -2195,14 +2213,15 @@ button {
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
-  border: 1px solid #ececec;
-  border-radius: 7px;
+  background: #ffffff;
+  border: 1px solid #d2d4d6;
+  border-radius: 0;
 }
 
 .moss-finder-track-swatch {
   width: 40px;
   height: 40px;
-  border-radius: 6px;
+  border-radius: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2213,20 +2232,25 @@ button {
   display: flex;
   flex-direction: column;
   font-size: 13px;
+  color: #222222;
 }
 
 .moss-finder-track-info span {
   font-size: 11.5px;
-  color: #777;
+  color: #676a6c;
 }
 
 .moss-finder-action-btn {
-  background: #0c92ff;
-  color: #fff;
-  padding: 7px 12px;
-  border-radius: 6px;
+  background: #0088cc;
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 0;
   font-size: 12px;
   font-weight: 600;
+}
+
+.moss-finder-action-btn:hover {
+  background: #005f8f;
 }
 
 .moss-settings-section {
@@ -2234,16 +2258,17 @@ button {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  background: #ffffff;
 }
 
 .moss-settings-section h3 {
   font-size: 13.5px;
-  color: #222;
+  color: #222222;
 }
 
 .moss-settings-hint {
   font-size: 12px;
-  color: #666;
+  color: #676a6c;
 }
 
 .moss-preset-grid {
@@ -2254,28 +2279,41 @@ button {
 
 .moss-preset-card {
   text-align: left;
-  padding: 10px 12px;
-  border-radius: 7px;
-  border: 1.5px solid #e4e4e4;
-  background: #fafafa;
+  padding: 11px 13px;
+  border-radius: 0;
+  border: 1px solid #b7b9bb;
+  background: #d2d4d6;
   display: flex;
   flex-direction: column;
   gap: 3px;
 }
 
+.moss-preset-card:hover {
+  background: #c5c8ca;
+}
+
 .moss-preset-card.is-active {
-  border-color: #0c92ff;
-  background: #f0f8ff;
+  border-color: #0088cc;
+  border-bottom: 3px solid #0088cc;
+  background: #535659;
 }
 
 .moss-preset-card strong {
   font-size: 12.5px;
-  color: #111;
+  color: #222222;
+}
+
+.moss-preset-card.is-active strong {
+  color: #ffffff;
 }
 
 .moss-preset-card span {
   font-size: 11px;
-  color: #666;
+  color: #535659;
+}
+
+.moss-preset-card.is-active span {
+  color: #b9dcf2;
 }
 
 .moss-swatch-row {
@@ -2287,23 +2325,32 @@ button {
 .moss-swatch-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  border-radius: 6px;
-  border: 1.5px solid #e4e4e4;
+  gap: 10px;
+  padding: 9px 11px;
+  border-radius: 0;
+  border: 1px solid #b7b9bb;
+  background: #d2d4d6;
+  color: #222222;
   font-size: 12px;
 }
 
+.moss-swatch-btn:hover {
+  background: #c5c8ca;
+}
+
 .moss-swatch-btn.is-active {
-  border-color: #0c92ff;
+  border-color: #0088cc;
+  border-bottom: 3px solid #0088cc;
+  background: #b9dcf2;
+  color: #005f8f;
   font-weight: 600;
 }
 
 .moss-swatch-circle {
   width: 18px;
   height: 18px;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0;
+  border: 1px solid rgba(0, 0, 0, 0.25);
 }
 
 .moss-demo-actions {
@@ -2313,33 +2360,37 @@ button {
 }
 
 .moss-demo-actions button {
-  background: #2c313a;
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 6px;
+  background: #0088cc;
+  color: #ffffff;
+  padding: 9px 14px;
+  border-radius: 0;
   font-size: 12px;
   font-weight: 600;
 }
 
 .moss-demo-actions button:hover {
-  background: #0c92ff;
+  background: #005f8f;
 }
 
 .moss-settings-control-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 12px;
-  background: #f6f6f6;
-  border-radius: 6px;
+  padding: 11px 14px;
+  background: #d2d4d6;
+  border-left: 4px solid #0088cc;
+  border-radius: 0;
   font-size: 13px;
+  color: #222222;
 }
 
 .moss-settings-toggle-row {
-  padding: 10px 12px;
-  background: #f6f6f6;
-  border-radius: 6px;
+  padding: 11px 14px;
+  background: #d2d4d6;
+  border-left: 4px solid #005f8f;
+  border-radius: 0;
   font-size: 13px;
+  color: #222222;
 }
 
 .moss-settings-toggle-row label {
