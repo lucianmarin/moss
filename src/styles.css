@@ -1,0 +1,2543 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* =========================================================================
+   1. DESKTOP CANVAS & WALLPAPERS
+   ========================================================================= */
+.moss-desktop {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  perspective: 1400px;
+  transition: background 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* V2 Priority Neutral Matte Gray (#808080 from moss-v2-switcher.png & moss-v2-dock.jpg) */
+.moss-desktop.wallpaper-v2-gray {
+  background: #808080;
+}
+
+/* V1 Classic Alpine Mountain Mist (from moss-v1-laptop.jpg & moss-v1-player.jpg) */
+.moss-desktop.wallpaper-v1-mountain {
+  background:
+    radial-gradient(ellipse at 50% 88%, rgba(25, 42, 58, 0.72) 0%, transparent 65%),
+    linear-gradient(175deg, #b8beb8 0%, #c8ccc2 42%, #8d9aa4 72%, #2b3c4d 100%);
+}
+
+.moss-desktop.wallpaper-moss-forest {
+  background: linear-gradient(145deg, #52615b 0%, #374440 100%);
+}
+
+.moss-desktop.wallpaper-obsidian {
+  background: radial-gradient(circle at 30% 20%, #343940 0%, #1c1e22 100%);
+}
+
+.moss-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+}
+
+/* =========================================================================
+   2. V2 TOP SYSTEM BAR & TOP-LEFT APP SWITCHER STACK (moss-v2-switcher.png)
+   ========================================================================= */
+.moss-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 36px;
+  background: #d9d9d9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px 0 12px;
+  z-index: 900;
+  color: #000000;
+  font-size: 13.5px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+}
+
+.moss-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.moss-bolt-icon-static {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 26px;
+  color: #000;
+}
+
+.moss-active-app-name {
+  font-weight: 700;
+  font-size: 13.5px;
+  letter-spacing: -0.01em;
+  padding: 4px 8px;
+  border-radius: 5px;
+  color: #000;
+  cursor: pointer;
+  transition: background 0.14s ease;
+}
+
+.moss-active-app-name:hover,
+.moss-active-app-name.is-active {
+  background: rgba(0, 0, 0, 0.09);
+}
+
+.moss-menubar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.moss-menu-item-wrap {
+  position: relative;
+}
+
+.moss-menu-trigger {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 13.5px;
+  font-weight: 400;
+  color: #111;
+  transition: background 0.12s ease;
+}
+
+.moss-menu-trigger:hover,
+.moss-menu-trigger.is-open {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.moss-menu-dropdown {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  min-width: 215px;
+  background: #efefef;
+  border-radius: 7px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1200;
+}
+
+.moss-menu-dropdown button {
+  text-align: left;
+  padding: 7px 11px;
+  font-size: 12.5px;
+  border-radius: 5px;
+  color: #181818;
+}
+
+.moss-menu-dropdown button:hover {
+  background: #0c92ff;
+  color: #fff;
+}
+
+.moss-menu-divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  margin: 4px 6px;
+}
+
+.moss-menu-section-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #666;
+  padding: 4px 11px 2px;
+}
+
+.moss-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.moss-tray-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
+  color: #000;
+}
+
+.moss-tray-btn:hover,
+.moss-tray-btn.is-active {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.moss-clock-btn {
+  font-weight: 700;
+  font-size: 13.5px;
+  color: #000;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+
+.moss-clock-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* V2 Top-Left Drop-Down App Switcher Stack */
+.moss-v2-switcher-stack {
+  position: fixed;
+  top: 44px;
+  left: 38px;
+  width: 146px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 800;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.18));
+}
+
+.moss-switcher-card {
+  width: 100%;
+  height: 39px;
+  background: #d9d9d9;
+  color: #555555;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 13px;
+  font-size: 13.5px;
+  font-weight: 700;
+  transition: background 0.16s ease, color 0.16s ease, transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.moss-switcher-card.is-running {
+  color: #222222;
+}
+
+.moss-switcher-card.is-focused {
+  color: #000000;
+  background: #e6e6e6;
+}
+
+.moss-switcher-card-left {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.moss-switcher-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.85;
+}
+
+.moss-switcher-card:first-child {
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+}
+
+.moss-switcher-card:last-child {
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+}
+
+.moss-switcher-card:hover {
+  background: #ececec;
+  color: #111;
+  transform: translateX(4px);
+}
+
+.moss-switcher-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #0c92ff;
+}
+
+.moss-switcher-dot.is-open {
+  background: #1a9e55;
+}
+
+/* =========================================================================
+   3. V2 FLOATING LEFT DOCK (moss-v2-dock.jpg)
+   ========================================================================= */
+.moss-v2-left-dock {
+  position: fixed;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  background: #e1e1e1;
+  border-radius: 8px;
+  padding: 12px 0 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  z-index: 850;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.moss-dock-apps {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.moss-dock-btn {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.18s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.15s ease;
+}
+
+/* Active apps are crisp black (#000), dormant apps are muted gray (#a8a8a8) as in moss-v2-dock.jpg */
+.moss-dock-btn.is-open {
+  color: #000000;
+}
+
+.moss-dock-btn.is-dormant {
+  color: #a8a8a8;
+}
+
+.moss-dock-btn:hover {
+  color: #000000;
+  transform: scale(1.12);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.moss-dock-tooltip {
+  position: absolute;
+  left: 46px;
+  top: 50%;
+  transform: translateY(-50%) translateX(-4px);
+  background: #22252a;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 9px;
+  border-radius: 5px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+}
+
+.moss-dock-btn:hover .moss-dock-tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.moss-dock-minimized-pip {
+  position: absolute;
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #0c92ff;
+}
+
+.moss-dock-footer {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.moss-dock-utility-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.moss-dock-util-btn {
+  color: #333;
+  padding: 2px;
+  border-radius: 4px;
+  opacity: 0.75;
+}
+
+.moss-dock-util-btn:hover,
+.moss-dock-util-btn.is-active {
+  opacity: 1;
+  color: #000;
+}
+
+.moss-dock-clock-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.moss-dock-vertical-clock {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #000;
+  cursor: pointer;
+}
+
+.moss-dock-more-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5px;
+  padding: 3px;
+}
+
+.moss-dock-more-btn span {
+  width: 2.5px;
+  height: 2.5px;
+  border-radius: 50%;
+  background: #000;
+}
+
+.moss-dock-popup {
+  position: absolute;
+  left: 54px;
+  bottom: 0;
+  width: 210px;
+  background: #efefef;
+  border-radius: 8px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+}
+
+.moss-dock-popup-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #666;
+  padding: 4px 10px;
+  text-transform: uppercase;
+}
+
+.moss-dock-popup button {
+  text-align: left;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  border-radius: 5px;
+  color: #111;
+}
+
+.moss-dock-popup button:hover {
+  background: #0c92ff;
+  color: #fff;
+}
+
+/* =========================================================================
+   4. CLEVER 3D WINDOW LIFECYCLE ANIMATIONS (OPEN, MINIMIZE, CLOSE)
+   ========================================================================= */
+.moss-window-wrapper {
+  position: absolute;
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
+  transition: box-shadow 0.25s ease;
+}
+
+.moss-window-surface {
+  width: 100%;
+  height: 100%;
+  border-radius: 7px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow:
+    0 14px 36px rgba(0, 0, 0, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.12);
+  transform: perspective(1200px) rotateX(var(--drag-rx, 0deg)) rotateY(var(--drag-ry, 0deg));
+  transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease;
+}
+
+.moss-window-wrapper.is-focused .moss-window-surface {
+  box-shadow:
+    0 20px 48px rgba(0, 0, 0, 0.3),
+    0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.moss-window-wrapper.is-dragging .moss-window-surface {
+  box-shadow:
+    0 28px 64px rgba(0, 0, 0, 0.36),
+    0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.moss-window-surface.moss-player-surface {
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+  box-shadow: none;
+}
+
+.moss-resize-handle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+  z-index: 30;
+}
+
+/* --- OPEN ANIMATION: Unfolds from exact Switcher / Dock origin vector --- */
+@keyframes mossWindowOpenSpring {
+  0% {
+    opacity: 0;
+    filter: blur(10px) brightness(1.12);
+    transform: translate3d(var(--origin-dx, -140px), var(--origin-dy, -90px), -180px)
+      scale3d(0.18, 0.12, 1) rotateX(22deg) rotateY(-10deg);
+  }
+  62% {
+    opacity: 1;
+    filter: blur(0px) brightness(1.02);
+    transform: translate3d(calc(var(--origin-dx, 0px) * -0.03), calc(var(--origin-dy, 0px) * -0.03), 18px)
+      scale3d(1.025, 1.02, 1) rotateX(-2.5deg) rotateY(1.2deg);
+  }
+  84% {
+    transform: translate3d(0, 0, 0) scale3d(0.992, 0.995, 1) rotateX(0.6deg);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px) brightness(1);
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg);
+  }
+}
+
+/* --- MINIMIZE ANIMATION: Folds into Top-Left Switcher Stack or Dock --- */
+@keyframes mossWindowMinimizeFold {
+  0% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0deg);
+  }
+  32% {
+    opacity: 0.92;
+    transform: translate3d(calc(var(--origin-dx, -140px) * 0.22), calc(var(--origin-dy, -90px) * 0.16), -40px)
+      scale3d(0.84, 0.72, 1) rotateX(-16deg) rotateY(7deg);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate3d(var(--origin-dx, -140px), var(--origin-dy, -90px), -220px)
+      scale3d(0.14, 0.08, 1) rotateX(-26deg) rotateY(12deg);
+  }
+}
+
+/* --- CLOSE ANIMATION: Implosive Spatial Dissolve --- */
+@keyframes mossWindowCloseImplode {
+  0% {
+    opacity: 1;
+    filter: blur(0px) saturate(1);
+    transform: scale3d(1, 1, 1) rotateX(0deg);
+  }
+  25% {
+    opacity: 0.95;
+    transform: scale3d(1.028, 1.018, 1) translateY(-4px);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(12px) saturate(0.4);
+    transform: scale3d(0.66, 0.58, 1) translateY(14px) rotateX(16deg);
+  }
+}
+
+@keyframes mossWindowPulse {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.028);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.moss-win-opening {
+  animation: mossWindowOpenSpring 0.52s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.moss-win-minimizing {
+  pointer-events: none;
+  animation: mossWindowMinimizeFold 0.44s cubic-bezier(0.55, 0.04, 0.35, 1) forwards;
+}
+
+.moss-win-closing {
+  pointer-events: none;
+  animation: mossWindowCloseImplode 0.38s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.moss-win-pulse {
+  animation: mossWindowPulse 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* =========================================================================
+   5. V2 CHROMELESS BRAND HEADERS (Chrome, WhatsApp, Finder, Settings)
+   ========================================================================= */
+.moss-v2-header {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 11px 0 12px;
+  color: #ffffff;
+  cursor: grab;
+}
+
+.moss-v2-header:active {
+  cursor: grabbing;
+}
+
+.moss-chrome-header {
+  background: #0c92ff;
+}
+
+.moss-whatsapp-header {
+  background: #009988;
+}
+
+.moss-finder-header {
+  background: #2c313a;
+}
+
+.moss-settings-header {
+  background: #3d434d;
+}
+
+.moss-v2-header-left {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 11px;
+}
+
+.moss-v2-app-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.moss-v2-tabs {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 16px;
+}
+
+.moss-v2-tab {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 14px;
+  font-weight: 400;
+  padding: 0 2px;
+  transition: color 0.15s ease;
+}
+
+.moss-v2-tab:hover {
+  color: #ffffff;
+}
+
+.moss-v2-tab.is-active {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.moss-v2-tab.is-active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: #ffffff;
+}
+
+.moss-v2-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.moss-win-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: #ffffff;
+  border-radius: 50%;
+  opacity: 0.94;
+  transition: opacity 0.15s ease, transform 0.15s ease, background 0.15s ease;
+}
+
+.moss-win-action-btn:hover {
+  opacity: 1;
+  transform: scale(1.08);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.moss-minimize-btn {
+  opacity: 0.78;
+}
+
+.moss-min-line {
+  width: 10px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+}
+
+/* =========================================================================
+   6. CHROME BROWSER (V2 + V1 JOURNAL)
+   ========================================================================= */
+.moss-browser-window {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+}
+
+.moss-chrome-toolbar {
+  position: relative;
+  height: 39px;
+  background: #d9d9d9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  gap: 12px;
+}
+
+.moss-url-form {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.moss-url-search-icon {
+  color: #111;
+  flex-shrink: 0;
+}
+
+.moss-url-input {
+  width: 100%;
+  font-size: 13.5px;
+  color: #111;
+  background: transparent;
+}
+
+.moss-toolbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.moss-toolbar-controls button {
+  font-size: 15px;
+  color: #111;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.moss-toolbar-controls button:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.moss-browser-dropdown {
+  position: absolute;
+  top: 38px;
+  right: 8px;
+  background: #ffffff;
+  border-radius: 7px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+  padding: 6px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+}
+
+.moss-browser-dropdown button {
+  text-align: left;
+  padding: 8px 11px;
+  font-size: 12.5px;
+  border-radius: 5px;
+  color: #222;
+}
+
+.moss-browser-dropdown button:hover {
+  background: #0c92ff;
+  color: #fff;
+}
+
+.moss-browser-content {
+  flex: 1;
+  overflow-y: auto;
+  background: #ffffff;
+  position: relative;
+}
+
+/* Google Tab (moss-v2-switcher.png & moss-v2-dock.jpg) */
+.moss-google-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 22px 22px;
+}
+
+.moss-google-top-icons {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.moss-google-icon-btn {
+  color: #777777;
+  padding: 4px;
+  border-radius: 5px;
+}
+
+.moss-google-icon-btn:hover {
+  color: #111;
+  background: #f2f2f2;
+}
+
+.moss-google-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  width: 100%;
+  margin-top: -12px;
+}
+
+.moss-google-logo {
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.moss-google-search-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.moss-google-pill-input {
+  width: 62%;
+  max-width: 340px;
+  height: 36px;
+  background: #efefef;
+  border-radius: 999px;
+  padding: 0 18px;
+  font-size: 13.5px;
+  color: #222;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.moss-google-pill-input:focus {
+  background: #e8e8e8;
+  box-shadow: 0 0 0 2px rgba(12, 146, 255, 0.25);
+}
+
+.moss-google-footer {
+  font-size: 12.5px;
+  color: #888888;
+}
+
+/* Subreply Tab */
+.moss-subreply-page {
+  padding: 20px 26px;
+}
+
+.moss-subreply-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #ececec;
+}
+
+.moss-subreply-header h2 {
+  font-size: 19px;
+  color: #111;
+}
+
+.moss-subreply-header p {
+  font-size: 12.5px;
+  color: #777;
+}
+
+.moss-subreply-badge {
+  background: #0c92ff;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.moss-subreply-composer {
+  display: flex;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.moss-subreply-composer input {
+  flex: 1;
+  background: #f3f3f3;
+  padding: 9px 13px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.moss-subreply-composer button {
+  background: #111;
+  color: #fff;
+  padding: 0 16px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.moss-subreply-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.moss-subreply-card {
+  padding: 12px 14px;
+  background: #fafafa;
+  border-radius: 6px;
+  border: 1px solid #eeeeee;
+}
+
+.moss-subreply-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  margin-bottom: 5px;
+}
+
+.moss-subreply-meta span {
+  color: #888;
+}
+
+.moss-subreply-card p {
+  font-size: 13.5px;
+  color: #222;
+  line-height: 1.45;
+}
+
+.moss-subreply-actions {
+  margin-top: 8px;
+}
+
+.moss-subreply-actions button {
+  font-size: 11.5px;
+  color: #0c92ff;
+  font-weight: 600;
+}
+
+/* Hacker News Tab */
+.moss-hn-page {
+  background: #f6f6ef;
+  min-height: 100%;
+  padding-bottom: 16px;
+}
+
+.moss-hn-banner {
+  background: #ff6600;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #000;
+}
+
+.moss-hn-y {
+  border: 1px solid #fff;
+  color: #fff;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.moss-hn-links {
+  font-size: 11.5px;
+  opacity: 0.85;
+}
+
+.moss-hn-list {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.moss-hn-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.moss-hn-rank {
+  color: #828282;
+  min-width: 20px;
+  text-align: right;
+}
+
+.moss-hn-vote {
+  color: #828282;
+  font-size: 10px;
+  padding-top: 2px;
+}
+
+.moss-hn-vote.is-upvoted {
+  color: #ff6600;
+}
+
+.moss-hn-title {
+  color: #000;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.moss-hn-title:hover {
+  text-decoration: underline;
+}
+
+.moss-hn-domain {
+  font-size: 11px;
+  color: #828282;
+  font-weight: 400;
+}
+
+.moss-hn-subtext {
+  font-size: 11px;
+  color: #828282;
+  margin-top: 2px;
+}
+
+.moss-hn-subtext button {
+  font-size: 11px;
+  color: #828282;
+  text-decoration: underline;
+}
+
+/* V1 Browser Header & Journal (moss-v1-browser.jpg) */
+.moss-v1-browser-top {
+  height: 44px;
+  background: #a9acad;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+.moss-v1-nav-arrows {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  gap: 6px;
+}
+
+.moss-v1-nav-arrows button {
+  font-size: 16px;
+  color: #444;
+  font-weight: 700;
+}
+
+.moss-v1-tabs {
+  flex: 1;
+  display: flex;
+}
+
+.moss-v1-tab {
+  min-width: 105px;
+  background: #8a8d8f;
+  color: #e6e6e6;
+  font-size: 12.5px;
+  border-right: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.moss-v1-tab.is-active {
+  background: #484a4c;
+  color: #ffffff;
+  border-bottom: 3px solid #0088cc;
+}
+
+.moss-v1-cube-btn {
+  width: 44px;
+  background: #0088cc;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.moss-v1-address-bar {
+  height: 42px;
+  background: #d2d4d6;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 12px;
+}
+
+.moss-v1-url-box {
+  background: #ffffff;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.moss-v1-https {
+  color: #3a9c40;
+  font-weight: 600;
+}
+
+.moss-v1-url-rest {
+  color: #222;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.moss-v1-tag-icon {
+  margin-left: auto;
+  opacity: 0.45;
+}
+
+.moss-v1-bookmarks {
+  display: flex;
+  gap: 10px;
+}
+
+.moss-v1-bookmarks button {
+  font-size: 12px;
+  color: #444;
+}
+
+.moss-v1-journal-page {
+  min-height: 100%;
+  background: #ffffff;
+}
+
+.moss-journal-nav {
+  display: flex;
+  gap: 22px;
+  padding: 20px 64px 0;
+}
+
+.moss-journal-nav-item {
+  padding-bottom: 14px;
+  font-size: 13.5px;
+  color: #6b6b6b;
+  position: relative;
+}
+
+.moss-journal-nav-item.is-active {
+  color: #398a7b;
+}
+
+.moss-journal-nav-item.is-active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 5px;
+  background: #666;
+}
+
+.moss-journal-hero {
+  background: #929292;
+  padding: 36px 64px;
+}
+
+.moss-journal-hero h1 {
+  font-size: 44px;
+  font-weight: 300;
+  color: #ffffff;
+}
+
+.moss-journal-article {
+  padding: 32px 64px;
+}
+
+.moss-journal-article h2 {
+  font-size: 26px;
+  font-weight: 400;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+.moss-journal-date {
+  display: flex;
+  gap: 18px;
+  font-size: 11.5px;
+  color: #a6a6a6;
+  margin-bottom: 18px;
+}
+
+.moss-journal-article p {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #222;
+  margin-bottom: 14px;
+}
+
+/* =========================================================================
+   7. WHATSAPP V2 MESSENGER (moss-v2-switcher.png & moss-v2-dock.jpg)
+   ========================================================================= */
+.moss-whatsapp-window {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+}
+
+.moss-whatsapp-subheader {
+  height: 28px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12.5px;
+  color: #888888;
+  border-bottom: 1px solid #efefef;
+}
+
+.moss-whatsapp-messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.moss-wa-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 14px;
+}
+
+.moss-wa-row.is-left {
+  background: #f2f2f2;
+}
+
+.moss-wa-row.is-right {
+  background: #ffffff;
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.moss-wa-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.moss-wa-text {
+  font-size: 13.2px;
+  line-height: 1.42;
+  color: #111111;
+}
+
+.moss-whatsapp-composer {
+  height: 40px;
+  background: #d9d9d9;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 10px;
+}
+
+.moss-wa-attach-btn {
+  color: #111;
+  display: flex;
+  align-items: center;
+}
+
+.moss-wa-input {
+  flex: 1;
+  font-size: 13.5px;
+  color: #111;
+}
+
+.moss-wa-input::placeholder {
+  color: #222;
+}
+
+.moss-whatsapp-contacts {
+  flex: 1;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.moss-wa-contact-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 7px;
+  background: #f5f5f5;
+  cursor: pointer;
+  font-size: 12.5px;
+}
+
+.moss-wa-contact-card:hover {
+  background: #eaeaea;
+}
+
+.moss-wa-status {
+  display: inline-block;
+  margin-top: 2px;
+  color: #009988;
+  font-weight: 600;
+  font-size: 11.5px;
+}
+
+/* =========================================================================
+   8. MOSS MEDIA PLAYER (moss-v1-player.jpg + /music/Sleaze-God_Damn.mp3)
+   ========================================================================= */
+.moss-player-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.moss-v1-player-bar {
+  position: relative;
+  width: 416px;
+  height: 92px;
+  display: flex;
+  align-items: stretch;
+  border-radius: 7px;
+  overflow: hidden;
+  box-shadow:
+    0 14px 36px rgba(0, 0, 0, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.12);
+  cursor: grab;
+  transition: background 0.3s ease;
+}
+
+.moss-player-micro-controls {
+  position: absolute;
+  top: 4px;
+  right: 84px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+  z-index: 10;
+}
+
+.moss-v1-player-bar:hover .moss-player-micro-controls {
+  opacity: 1;
+}
+
+.moss-player-micro-controls button {
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.moss-player-micro-controls button:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.moss-player-art {
+  width: 92px;
+  height: 92px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.moss-art-castanets {
+  background: radial-gradient(circle, #c8e6f8 0%, #bfe0f5 42%, #4a2306 54%, #381803 100%);
+}
+
+.moss-castanets-ring {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: #c8e6f8;
+  border: 4px dashed rgba(74, 35, 6, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.moss-castanets-center {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.moss-art-caribou {
+  background: #080b0e;
+}
+
+.moss-caribou-disc {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle,
+    #e54826 0px,
+    #f1b71c 4px,
+    #4c9c38 8px,
+    #d96b1f 12px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes mossVinylSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.moss-player-art.is-spinning .moss-castanets-ring,
+.moss-player-art.is-spinning .moss-caribou-disc {
+  animation: mossVinylSpin 9s linear infinite;
+}
+
+.moss-play-overlay {
+  font-size: 11px;
+  color: #111;
+  font-weight: 800;
+  opacity: 0.75;
+}
+
+.moss-player-middle {
+  flex: 1;
+  padding: 13px 18px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.moss-player-star-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.moss-player-star-btn {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.moss-player-audio-pill {
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+}
+
+.moss-player-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.moss-player-artist {
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.moss-player-track {
+  font-size: 18px;
+  font-weight: 300;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.moss-player-progress-track {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  position: relative;
+}
+
+.moss-player-progress-fill {
+  height: 100%;
+  transition: width 0.15s linear;
+}
+
+.moss-player-right-badge {
+  width: 78px;
+  height: 92px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.moss-player-track-index {
+  font-size: 19px;
+}
+
+.moss-player-track-index strong {
+  font-weight: 700;
+}
+
+.moss-player-time {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* =========================================================================
+   9. V1 CODE EDITOR (moss-v1-code.jpg & moss-v1-twitter.jpg)
+   ========================================================================= */
+.moss-code-window {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+}
+
+.moss-code-header {
+  position: relative;
+  height: 44px;
+  background: #b7b9bb;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+.moss-code-tabs {
+  display: flex;
+  align-items: stretch;
+}
+
+.moss-code-tab {
+  min-width: 102px;
+  padding: 0 16px;
+  background: #a5a8aa;
+  color: #dcdcdc;
+  font-size: 13px;
+  border-right: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.moss-code-tab.is-active {
+  background: #535659;
+  color: #ffffff;
+  border-bottom: 3px solid #0088cc;
+}
+
+.moss-code-header-right {
+  display: flex;
+  align-items: stretch;
+}
+
+.moss-code-plusminus {
+  width: 34px;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.moss-code-plusminus:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.moss-code-blue-btn {
+  width: 44px;
+  background: #0088cc;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.moss-v1-code-dropdown {
+  position: absolute;
+  top: 44px;
+  right: 0;
+  width: 112px;
+  background: #ffffff;
+  box-shadow: -4px 10px 24px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  z-index: 60;
+}
+
+.moss-v1-code-dropdown button {
+  text-align: left;
+  padding: 11px 16px;
+  font-size: 13px;
+  color: #222;
+  border-bottom: 1px solid #efefef;
+}
+
+.moss-v1-code-dropdown button:hover {
+  background: #f5f5f5;
+  color: #0088cc;
+}
+
+.moss-code-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 22px 10px;
+}
+
+.moss-code-textarea {
+  flex: 1;
+  width: 100%;
+  resize: none;
+  font-family: 'JetBrains Mono', 'Menlo', monospace;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #181818;
+}
+
+.moss-code-statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid #efefef;
+  font-size: 11.5px;
+  color: #777;
+}
+
+.moss-code-status-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.moss-code-status-actions button {
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #f0f0f0;
+  color: #333;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.moss-code-status-actions button.is-active,
+.moss-code-status-actions button:hover {
+  background: #0088cc;
+  color: #fff;
+}
+
+.moss-code-live-runner {
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: #f7f9fb;
+  border-radius: 5px;
+  border: 1px solid #dde5ed;
+}
+
+.moss-runner-label {
+  font-size: 11px;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.moss-runner-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.moss-runner-row input {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 5px 9px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.moss-char-counter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: #222;
+}
+
+.moss-char-counter.warning {
+  color: #ee4400;
+}
+
+/* =========================================================================
+   10. V1 TWITTER CLIENT (moss-v1-twitter.jpg & moss-v1-laptop.jpg)
+   ========================================================================= */
+.moss-v1-twitter-window {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+}
+
+.moss-twitter-rail {
+  width: 46px;
+  background: #b8babb;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.moss-twitter-rail-tabs {
+  display: flex;
+  flex-direction: column;
+}
+
+.moss-twitter-rail-btn {
+  height: 46px;
+  background: #8c8f91;
+  color: #cccccc;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.moss-twitter-rail-btn.is-active {
+  background: #676a6c;
+  color: #ffffff;
+}
+
+.moss-twitter-rail-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding-bottom: 8px;
+}
+
+.moss-twitter-rail-bottom button {
+  color: #555;
+  font-size: 14px;
+  width: 28px;
+  height: 24px;
+  border-radius: 4px;
+}
+
+.moss-twitter-rail-bottom button:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #000;
+}
+
+.moss-twitter-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.moss-twitter-feed {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.moss-tweet-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.moss-tweet-text-col {
+  flex: 1;
+}
+
+.moss-tweet-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  margin-bottom: 4px;
+}
+
+.moss-tweet-time {
+  color: #999999;
+}
+
+.moss-tweet-author {
+  color: #222222;
+  font-weight: 700;
+}
+
+.moss-tweet-body {
+  font-size: 12.5px;
+  line-height: 1.42;
+  color: #444444;
+}
+
+.moss-tweet-avatar {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  margin-top: 18px;
+}
+
+.moss-twitter-trends {
+  flex: 1;
+  padding: 14px 16px;
+  overflow-y: auto;
+}
+
+.moss-trend-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.moss-trend-row {
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+}
+
+.moss-trend-row strong {
+  font-size: 13px;
+  color: #0088cc;
+  margin-right: 8px;
+}
+
+.moss-trend-row span {
+  font-size: 11px;
+  color: #999;
+}
+
+.moss-trend-row p {
+  font-size: 12px;
+  color: #444;
+  margin-top: 2px;
+}
+
+.moss-twitter-composer {
+  border-top: 1px solid #ececec;
+  padding: 8px 12px;
+  background: #fafafa;
+}
+
+.moss-twitter-composer input {
+  width: 100%;
+  font-size: 12.5px;
+  color: #222;
+}
+
+/* =========================================================================
+   11. FINDER & SETTINGS APPS
+   ========================================================================= */
+.moss-finder-window,
+.moss-settings-window {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+}
+
+.moss-finder-body,
+.moss-settings-body {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.moss-finder-split {
+  display: flex;
+  height: 100%;
+}
+
+.moss-finder-file-list {
+  width: 215px;
+  background: #f4f5f7;
+  border-right: 1px solid #e4e6ea;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow-y: auto;
+}
+
+.moss-finder-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  text-align: left;
+  font-size: 12.5px;
+  color: #222;
+}
+
+.moss-finder-row.is-selected {
+  background: #0c92ff;
+  color: #fff;
+}
+
+.moss-era-tag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.moss-finder-preview {
+  flex: 1;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.moss-finder-preview-img-wrap {
+  background: #1e2024;
+  border-radius: 6px;
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  max-height: 220px;
+}
+
+.moss-finder-preview-img-wrap img {
+  max-width: 100%;
+  max-height: 204px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.moss-finder-preview-meta h3 {
+  font-size: 14.5px;
+  color: #111;
+}
+
+.moss-finder-preview-meta p {
+  font-size: 12.5px;
+  color: #555;
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+.moss-finder-meta-tags {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.moss-finder-meta-tags span {
+  font-size: 11px;
+  background: #efefef;
+  padding: 3px 8px;
+  border-radius: 4px;
+  color: #444;
+}
+
+.moss-finder-music-pane {
+  padding: 16px;
+}
+
+.moss-finder-music-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f4f6f8;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.moss-finder-track-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.moss-finder-track-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #ececec;
+  border-radius: 7px;
+}
+
+.moss-finder-track-swatch {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.moss-finder-track-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+}
+
+.moss-finder-track-info span {
+  font-size: 11.5px;
+  color: #777;
+}
+
+.moss-finder-action-btn {
+  background: #0c92ff;
+  color: #fff;
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.moss-settings-section {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.moss-settings-section h3 {
+  font-size: 13.5px;
+  color: #222;
+}
+
+.moss-settings-hint {
+  font-size: 12px;
+  color: #666;
+}
+
+.moss-preset-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.moss-preset-card {
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 7px;
+  border: 1.5px solid #e4e4e4;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.moss-preset-card.is-active {
+  border-color: #0c92ff;
+  background: #f0f8ff;
+}
+
+.moss-preset-card strong {
+  font-size: 12.5px;
+  color: #111;
+}
+
+.moss-preset-card span {
+  font-size: 11px;
+  color: #666;
+}
+
+.moss-swatch-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.moss-swatch-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1.5px solid #e4e4e4;
+  font-size: 12px;
+}
+
+.moss-swatch-btn.is-active {
+  border-color: #0c92ff;
+  font-weight: 600;
+}
+
+.moss-swatch-circle {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.moss-demo-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.moss-demo-actions button {
+  background: #2c313a;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.moss-demo-actions button:hover {
+  background: #0c92ff;
+}
+
+.moss-settings-control-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: #f6f6f6;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.moss-settings-toggle-row {
+  padding: 10px 12px;
+  background: #f6f6f6;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.moss-settings-toggle-row label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+/* =========================================================================
+   12. V1 RIGHT-EDGE HUD, VOLUME SLIDER & BOTTOM BAR (moss-v1-code.jpg)
+   ========================================================================= */
+/* Volume Control in Top Menu Bar & Left Dock */
+.moss-topbar-volume-wrap,
+.moss-dock-volume-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.moss-dock-vol-btn {
+  width: 32px;
+  height: 30px;
+  border-radius: 6px;
+  color: #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.moss-dock-vol-btn:hover,
+.moss-dock-vol-btn.is-active {
+  background: rgba(0, 0, 0, 0.08);
+  color: #000;
+}
+
+.moss-menubar-volume-flyout,
+.moss-dock-volume-flyout {
+  position: absolute;
+  height: 40px;
+  background: #e2e2e2;
+  border-radius: 7px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.24);
+  display: flex;
+  align-items: center;
+  padding: 0 12px 0 0;
+  gap: 10px;
+  z-index: 1200;
+}
+
+.moss-menubar-volume-flyout {
+  top: 34px;
+  right: 0;
+}
+
+.moss-dock-volume-flyout {
+  left: 46px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.moss-vol-mute-badge {
+  width: 38px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #111;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.moss-vol-mute-badge:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.moss-vol-slider {
+  width: 108px;
+  accent-color: #0c92ff;
+  cursor: pointer;
+}
+
+/* V1 Bottom Ticker & Watermark Clock (moss-v1-laptop.jpg & moss-v1-twitter.jpg) */
+.moss-v1-watermark-clock {
+  position: fixed;
+  left: 56px;
+  bottom: 66px;
+  font-size: 62px;
+  font-weight: 200;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.02em;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.moss-v1-bottom-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 42px;
+  background: rgba(28, 35, 43, 0.86);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  color: #ffffff;
+  z-index: 900;
+}
+
+.moss-v1-ticker-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.moss-v1-badge-red {
+  background: #e01b24;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.moss-v1-ticker-text {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 340px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.moss-v1-bar-clock {
+  font-size: 15px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.moss-v1-bar-tray {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.moss-v1-bar-tray button {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.moss-v1-bar-tray button.is-active,
+.moss-v1-bar-tray button:hover {
+  color: #ffffff;
+}
+
+/* =========================================================================
+   13. NOTIFICATIONS POPOVER & SPATIAL OVERVIEW (EXPOSÉ)
+   ========================================================================= */
+.moss-notifications-popover {
+  position: fixed;
+  top: 42px;
+  right: 14px;
+  width: 310px;
+  background: #efefef;
+  border-radius: 8px;
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.28);
+  padding: 10px;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.moss-notif-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  color: #444;
+  padding: 2px 4px;
+}
+
+.moss-notif-header button {
+  font-size: 11.5px;
+  color: #0c92ff;
+}
+
+.moss-notif-card {
+  display: flex;
+  gap: 10px;
+  padding: 9px;
+  background: #ffffff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.moss-notif-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.moss-notif-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.moss-notif-meta span {
+  color: #888;
+}
+
+.moss-notif-card p {
+  font-size: 12px;
+  color: #333;
+  margin-top: 3px;
+}
+
+.moss-overview-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 22, 26, 0.68);
+  backdrop-filter: blur(14px);
+  z-index: 1500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 36px;
+}
+
+.moss-overview-container {
+  width: 100%;
+  max-width: 860px;
+  background: rgba(242, 242, 244, 0.96);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
+}
+
+.moss-overview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.moss-overview-header h2 {
+  font-size: 19px;
+  color: #111;
+}
+
+.moss-overview-header p {
+  font-size: 12.5px;
+  color: #666;
+}
+
+.moss-overview-presets {
+  display: flex;
+  gap: 6px;
+}
+
+.moss-overview-presets button {
+  padding: 6px 11px;
+  border-radius: 6px;
+  background: #e2e2e2;
+  font-size: 12px;
+  font-weight: 600;
+  color: #222;
+}
+
+.moss-overview-presets button.is-active {
+  background: #0c92ff;
+  color: #fff;
+}
+
+.moss-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px;
+}
+
+.moss-overview-card {
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.moss-overview-card:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.moss-overview-card-top {
+  height: 36px;
+  padding: 0 12px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.moss-overview-badge {
+  font-size: 10px;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.22);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.moss-overview-card-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12.5px;
+  color: #222;
+}
+
+.moss-overview-card-body span {
+  font-size: 11.5px;
+  color: #777;
+}
