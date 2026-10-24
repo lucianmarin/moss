@@ -68,6 +68,7 @@ export default function PlayerApp() {
     tracks,
     currentTrack,
     currentTrackIndex,
+    songChangeCount,
     isPlaying,
     currentTime,
     duration,
@@ -207,10 +208,8 @@ export default function PlayerApp() {
             title="Click to switch between Light and Dark Player designs"
           >
             <div className="moss-player-track-index">
-              <strong>9</strong>
-              <span style={{ color: activeTheme.badgeMuted }}>
-                /{showDualPlayer ? '9' : '13'}
-              </span>
+              <strong>{songChangeCount}</strong>
+              <span style={{ color: activeTheme.badgeMuted }}>/∞</span>
             </div>
             <div className="moss-player-time">
               {formatSeconds(currentTime)}

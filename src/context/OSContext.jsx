@@ -148,8 +148,10 @@ export function OSProvider({ children }) {
 
   // Global Audio Player State (streams https://streamssleu.chilltrax.com/stream?sid=1)
   const audioRef = useRef(null);
+  const lastSongKeyRef = useRef(null);
   const [tracks, setTracks] = useState(AUDIO_TRACKS);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [songChangeCount, setSongChangeCount] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(133); // 2:13 matching moss-v1-player.jpg
   const [duration, setDuration] = useState(210);
@@ -220,12 +222,21 @@ export function OSProvider({ children }) {
       }
 
       if (data && data.artist && data.title) {
+        const songKey = `${data.artist} — ${data.title}`;
+        if (lastSongKeyRef.current === null) {
+          lastSongKeyRef.current = songKey;
+        } else if (lastSongKeyRef.current !== songKey) {
+          lastSongKeyRef.current = songKey;
+          setSongChangeCount((c) => c + 1);
+        }
+
         setTracks((prev) =>
           prev.map((t) => ({
             ...t,
             artist: data.artist,
             title: data.title,
-            cover: data.cover || t.cover || null
+            cover: data.cover || t.cover || null,
+            trackNum: lastSongKeyRef.current ? undefined : t.trackNum
           }))
         );
       }
@@ -539,6 +550,7 @@ export function OSProvider({ children }) {
     tracks,
     currentTrack,
     currentTrackIndex,
+    songChangeCount,
     isPlaying,
     currentTime,
     duration,

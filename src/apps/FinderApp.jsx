@@ -9,6 +9,7 @@ export default function FinderApp() {
     windows,
     codeFiles,
     tracks,
+    songChangeCount,
     setWindowTab,
     minimizeWindow,
     closeWindow,
@@ -161,7 +162,7 @@ export default function FinderApp() {
                         {tr.artist} — {tr.title}
                       </strong>
                       <span>
-                        {`${tr.album} • Track ${tr.trackNum}/${tr.totalTracks}`}
+                        {`${tr.album} • Track ${songChangeCount}/∞`}
                       </span>
                     </div>
                     <button
