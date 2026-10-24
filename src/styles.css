@@ -98,9 +98,84 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
+  width: 26px;
   height: 26px;
+  border-radius: 5px;
   color: #000;
+  cursor: pointer;
+  transition: background-color 0.14s ease;
+}
+
+.moss-bolt-icon-static:hover,
+.moss-bolt-icon-static.is-active {
+  background: rgba(0, 0, 0, 0.09);
+}
+
+.moss-os-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.moss-os-search-popover {
+  position: fixed;
+  top: 44px;
+  left: 12px;
+  width: 210px;
+  background: #d9d9d9;
+  border-radius: 7px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 950;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.18));
+}
+
+.moss-os-search-form {
+  width: 100%;
+}
+
+.moss-os-search-input {
+  width: 100%;
+  height: 30px;
+  background: #ffffff;
+  border: none;
+  border-radius: 5px;
+  padding: 0 10px;
+  font-size: 13px;
+  color: #111;
+}
+
+.moss-os-search-results {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.moss-os-search-item {
+  width: 100%;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #222;
+  transition: background-color 0.14s ease;
+}
+
+.moss-os-search-item:hover {
+  background: #ececec;
+  color: #000;
+}
+
+.moss-os-search-empty {
+  padding: 8px 10px;
+  font-size: 12px;
+  color: #666;
 }
 
 .moss-active-app-name {
@@ -895,7 +970,15 @@ button {
   background: #ffffff;
 }
 
-.moss-window-wrapper.is-dragging .moss-browser-iframe {
+.moss-iframe-focus-shield {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: transparent;
+}
+
+.moss-window-wrapper.is-dragging .moss-browser-iframe,
+.moss-window-wrapper.is-unfocused .moss-browser-iframe {
   pointer-events: none;
 }
 
@@ -1727,11 +1810,14 @@ button {
 
 .moss-tweet-text-col {
   flex: 1;
+  min-width: 0;
 }
 
 .moss-tweet-meta {
   display: flex;
+  align-items: baseline;
   justify-content: space-between;
+  width: 100%;
   font-size: 12.5px;
   margin-bottom: 4px;
 }
@@ -1743,6 +1829,8 @@ button {
 .moss-tweet-author {
   color: #222222;
   font-weight: 700;
+  margin-left: auto;
+  text-align: right;
 }
 
 .moss-tweet-body {
@@ -1755,7 +1843,7 @@ button {
   width: 44px;
   height: 44px;
   object-fit: cover;
-  margin-top: 18px;
+  flex-shrink: 0;
 }
 
 .moss-twitter-trends {

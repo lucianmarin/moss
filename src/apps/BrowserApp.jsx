@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import WindowFrame from '../components/WindowFrame';
 import { useOS } from '../context/OSContext';
 import { CubeV1Icon } from '../components/MossIcons';
@@ -57,6 +57,8 @@ const BOOKMARK_FOLDERS = {
 export default function BrowserApp() {
   const {
     windows,
+    focusedApp,
+    focusWindow,
     setWindowTab,
     minimizeWindow,
     closeWindow,
@@ -65,6 +67,8 @@ export default function BrowserApp() {
 
   const win = windows.chrome;
   const activeTab = TAB_CONFIG[win?.activeTab] ? win.activeTab : 'News';
+  const isFocused = focusedApp === 'chrome';
+  const iframeRef = useRef(null);
 
   const [tabs, setTabs] = useState(DEFAULT_TABS);
   const [tabUrls, setTabUrls] = useState({
@@ -77,6 +81,18 @@ export default function BrowserApp() {
   const [urlInput, setUrlInput] = useState(TAB_CONFIG[activeTab].url);
   const [menuOpen, setMenuOpen] = useState(false);
   const [openBookmarkFolder, setOpenBookmarkFolder] = useState(null);
+
+  useEffect(() => {
+    const handleWindowBlur = () => {
+      if (document.activeElement === iframeRef.current) {
+        focusWindow('chrome');
+        setOpenBookmarkFolder(null);
+        setMenuOpen(false);
+      }
+    };
+    window.addEventListener('blur', handleWindowBlur);
+    return () => window.removeEventListener('blur', handleWindowBlur);
+  }, [focusWindow]);
 
   const switchTab = (tabName, customUrl) => {
     const resolved = TAB_CONFIG[tabName] ? tabName : 'News';
@@ -300,12 +316,24 @@ export default function BrowserApp() {
         <div
           className="moss-browser-content"
           data-no-drag="true"
-          onClick={() => {
+          onMouseDown={() => {
+            focusWindow('chrome');
             if (openBookmarkFolder) setOpenBookmarkFolder(null);
             if (menuOpen) setMenuOpen(false);
           }}
         >
+          {(!isFocused || openBookmarkFolder || menuOpen) && (
+            <div
+              className="moss-iframe-focus-shield"
+              onMouseDown={() => {
+                focusWindow('chrome');
+                if (openBookmarkFolder) setOpenBookmarkFolder(null);
+                if (menuOpen) setMenuOpen(false);
+              }}
+            />
+          )}
           <iframe
+            ref={iframeRef}
             key={activeTab}
             src={activeIframeUrl}
             title={`Moss Browser - ${activeTab}`}

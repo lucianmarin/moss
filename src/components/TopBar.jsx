@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useOS, APP_DEFINITIONS, APP_ORDER } from '../context/OSContext';
 import {
   BoltIcon,
@@ -42,7 +42,11 @@ export default function TopBar() {
 
   const [activeMenu, setActiveMenu] = useState(null);
   const [volumeOpen, setVolumeOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [clockText, setClockText] = useState('19:42');
+  const searchInputRef = useRef(null);
+  const searchWrapRef = useRef(null);
 
   useEffect(() => {
     const updateClock = () => {
@@ -56,6 +60,41 @@ export default function TopBar() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (searchOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [searchOpen]);
+
+  useEffect(() => {
+    if (!searchOpen) return;
+    const handleOutsideClick = (e) => {
+      if (searchWrapRef.current && !searchWrapRef.current.contains(e.target)) {
+        setSearchOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, [searchOpen]);
+
+  const hasSearchQuery = searchQuery.trim().length > 0;
+  const filteredApps = hasSearchQuery
+    ? APP_ORDER.filter((appId) => {
+        const def = APP_DEFINITIONS[appId];
+        const q = searchQuery.trim().toLowerCase();
+        return (
+          def.title.toLowerCase().includes(q) ||
+          appId.toLowerCase().includes(q)
+        );
+      })
+    : [];
+
+  const handleLaunchFromSearch = (appId) => {
+    openWindow(appId, { source: 'switcher' });
+    setSearchOpen(false);
+    setSearchQuery('');
+  };
+
   const currentAppDef = APP_DEFINITIONS[focusedApp] || APP_DEFINITIONS.chrome;
 
   if (shellMode !== 'advanced') {
@@ -66,9 +105,72 @@ export default function TopBar() {
     <>
       <header className="moss-topbar" onMouseLeave={() => setActiveMenu(null)}>
         <div className="moss-topbar-left">
-          <span className="moss-bolt-icon-static" title="Moss OS">
-            <BoltIcon size={17} />
-          </span>
+          <div className="moss-os-search-wrap" ref={searchWrapRef}>
+            <button
+              type="button"
+              className={`moss-bolt-icon-static moss-bolt-btn ${searchOpen ? 'is-active' : ''}`}
+              title="Moss OS — Search Apps"
+              onClick={() => {
+                setSearchOpen((v) => !v);
+                setSwitcherOpen(false);
+                setActiveMenu(null);
+                setNotificationsOpen(false);
+              }}
+            >
+              <BoltIcon size={17} />
+            </button>
+
+            {searchOpen && (
+              <div className="moss-os-search-popover">
+                <form
+                  className="moss-os-search-form"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (filteredApps.length > 0) {
+                      handleLaunchFromSearch(filteredApps[0]);
+                    }
+                  }}
+                >
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    className="moss-os-search-input"
+                    placeholder="Search apps..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Escape') {
+                        e.stopPropagation();
+                        setSearchOpen(false);
+                      }
+                    }}
+                  />
+                </form>
+                {hasSearchQuery && (
+                  <div className="moss-os-search-results">
+                    {filteredApps.length > 0 ? (
+                      filteredApps.map((appId) => {
+                        const def = APP_DEFINITIONS[appId];
+                        return (
+                          <button
+                            key={appId}
+                            type="button"
+                            className="moss-os-search-item"
+                            onClick={() => handleLaunchFromSearch(appId)}
+                          >
+                            <span className="moss-switcher-card-icon">{APP_ICON_MAP[appId]}</span>
+                            <span>{def.title}</span>
+                          </button>
+                        );
+                      })
+                    ) : (
+                      <div className="moss-os-search-empty">No matching apps</div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
           <button
             type="button"
@@ -76,6 +178,7 @@ export default function TopBar() {
             className={`moss-active-app-name ${switcherOpen ? 'is-active' : ''}`}
             onClick={() => {
               setSwitcherOpen((v) => !v);
+              setSearchOpen(false);
               setActiveMenu(null);
             }}
             title="Click to open App Switcher"

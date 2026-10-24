@@ -95,7 +95,9 @@ export default function TwitterApp() {
                   <div className="moss-tweet-text-col">
                     <div className="moss-tweet-meta">
                       <span className="moss-tweet-time">{tweet.time}</span>
-                      <strong className="moss-tweet-author">{tweet.author}</strong>
+                      <strong className="moss-tweet-author">
+                        @{tweet.author.replace(/^@/, '')}
+                      </strong>
                     </div>
                     <p className="moss-tweet-body">{tweet.text}</p>
                   </div>

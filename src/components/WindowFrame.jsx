@@ -135,7 +135,15 @@ export default function WindowFrame({
         '--drag-rx': `${tilt.rx}deg`,
         '--drag-ry': `${tilt.ry}deg`
       }}
-      onMouseDown={() => focusWindow(appId)}
+      onMouseDown={() => {
+        if (
+          document.activeElement instanceof HTMLIFrameElement &&
+          appId !== 'chrome'
+        ) {
+          document.activeElement.blur();
+        }
+        focusWindow(appId);
+      }}
     >
       <div
         className={`moss-window-surface ${framelessShadow ? 'moss-player-surface' : ''}`}
