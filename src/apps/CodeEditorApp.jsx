@@ -20,7 +20,7 @@ export default function CodeEditorApp() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [livePreview, setLivePreview] = useState(false);
   const [sampleInput, setSampleInput] = useState(
-    'Moss OS blends V2 chromeless headers with V1 spatial minimalism.'
+    'Moss OS blends V2 shell ergonomics with V1 window design.'
   );
   const [compactNames, setCompactNames] = useState(false);
 
@@ -58,7 +58,7 @@ export default function CodeEditorApp() {
           className="moss-code-header"
           onDoubleClick={() => minimizeWindow('code', 'switcher')}
         >
-          <div className="moss-code-tabs" data-no-drag="true">
+          <div className="moss-code-tabs">
             {codeFiles.map((file) => {
               const isActive = file.id === currentFile.id;
               return (
@@ -73,11 +73,11 @@ export default function CodeEditorApp() {
             })}
           </div>
 
-          <div className="moss-code-header-right" data-no-drag="true">
+          <div className="moss-code-header-right">
             <button
               className="moss-code-plusminus"
               onClick={() => minimizeWindow('code', 'switcher')}
-              title="Minimize Code Editor (—)"
+              title="Minimize Code Editor (_)"
             >
               _
             </button>
@@ -97,7 +97,6 @@ export default function CodeEditorApp() {
             </button>
           </div>
 
-          {/* Exact V1 Dropdown Menu from moss-v1-twitter.jpg & moss-v1-laptop.jpg */}
           {menuOpen && (
             <div className="moss-v1-code-dropdown" data-no-drag="true">
               <button onClick={handleNewFile}>New</button>
@@ -140,7 +139,9 @@ export default function CodeEditorApp() {
           />
 
           <div className="moss-code-statusbar">
-            <span>{currentFile.name} • {currentFile.content.length} chars</span>
+            <span>
+              {currentFile.name} • {currentFile.content.length} chars
+            </span>
             <div className="moss-code-status-actions">
               <button onClick={() => setCompactNames((v) => !v)}>
                 {compactNames ? 'Full Tab Names' : 'V1 Short Names (ctnr.html)'}

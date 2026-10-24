@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import WindowFrame from '../components/WindowFrame';
 import { useOS } from '../context/OSContext';
-import { ChromeIcon, CircleCloseIcon, CubeV1Icon } from '../components/MossIcons';
+import { CubeV1Icon } from '../components/MossIcons';
 
 const TAB_URLS = {
-  Google: 'https://google.com/',
-  Subreply: 'https://subreply.com/lucianmarin',
-  'Hacker News': 'https://news.ycombinator.com/',
-  Journal: 'https://lucianmarin.com/archive/design-the-flying-car'
+  YouTube: 'https://youtube.com/video/apparat-songc',
+  Facebook: 'https://subreply.com/lucianmarin',
+  Reddit: 'https://news.ycombinator.com/',
+  Google: 'https://google.com/'
 };
 
 const SUBREPLY_POSTS = [
@@ -15,14 +15,14 @@ const SUBREPLY_POSTS = [
     id: 1,
     handle: 'lucianmarin',
     time: '14m ago',
-    text: 'Moss V2 replaces window titlebars with brand-colored tab headers. Every pixel of vertical space belongs to content and navigation.',
+    text: 'Moss combines V1 window chrome and spatial minimalism with V2 shell modes.',
     replies: 12
   },
   {
     id: 2,
     handle: 'mike',
     time: '42m ago',
-    text: 'The top-left minimized app stack in V2 feels much faster than scanning a crowded bottom taskbar.',
+    text: 'The V1 browser layout with the green https:// prefix and tag icon is timeless.',
     replies: 5
   },
   {
@@ -43,7 +43,7 @@ const HN_STORIES = [
     author: 'lucianmarin',
     time: '2 hours ago',
     comments: 164,
-    targetTab: 'Journal'
+    targetTab: 'YouTube'
   },
   {
     id: 102,
@@ -53,21 +53,21 @@ const HN_STORIES = [
     author: 'lucianmarin',
     time: '4 hours ago',
     comments: 89,
-    targetTab: 'Journal'
+    targetTab: 'YouTube'
   },
   {
     id: 103,
-    title: 'Why chromeless brand-header windows reduce cognitive load in multitasking OSes',
+    title: 'Why spatial minimalism reduces cognitive load in multitasking OSes',
     domain: 'subreply.com',
     points: 245,
     author: 'mike',
     time: '5 hours ago',
     comments: 72,
-    targetTab: 'Subreply'
+    targetTab: 'Facebook'
   },
   {
     id: 104,
-    title: 'Physics-driven FLIP and 3D perspective animations for spatial window management',
+    title: 'Physics-driven 3D perspective animations for spatial window management',
     domain: 'github.com/lucianmarin/moss',
     points: 198,
     author: 'trisha',
@@ -80,7 +80,6 @@ const HN_STORIES = [
 export default function BrowserApp() {
   const {
     windows,
-    shellMode,
     setWindowTab,
     minimizeWindow,
     closeWindow,
@@ -88,46 +87,61 @@ export default function BrowserApp() {
   } = useOS();
 
   const win = windows.chrome;
-  const activeTab = win?.activeTab || 'Google';
+  const activeTab = win?.activeTab || 'YouTube';
 
-  const [urlInput, setUrlInput] = useState(TAB_URLS[activeTab] || 'https://google.com/');
+  const [urlInput, setUrlInput] = useState(
+    TAB_URLS[activeTab] || 'https://youtube.com/video/apparat-songc'
+  );
+  const [tabs, setTabs] = useState(['YouTube', 'Facebook', 'Reddit']);
   const [googleQuery, setGoogleQuery] = useState('');
   const [journalSection, setJournalSection] = useState('Journal');
-  const [v1ChromeStyle, setV1ChromeStyle] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [subreplyList, setSubreplyList] = useState(SUBREPLY_POSTS);
   const [newSubreply, setNewSubreply] = useState('');
   const [upvotedIds, setUpvotedIds] = useState({});
 
-  const isV1Look = v1ChromeStyle || shellMode === 'v1-classic';
+  const tabOrder = ['YouTube', 'Facebook', 'Reddit', 'Google'];
 
   const switchTab = (tabName) => {
-    setWindowTab('chrome', tabName);
-    setUrlInput(TAB_URLS[tabName] || 'https://google.com/');
+    const resolved = tabOrder.includes(tabName) ? tabName : 'YouTube';
+    if (!tabs.includes(resolved)) {
+      setTabs((prev) => [...prev, resolved]);
+    }
+    setWindowTab('chrome', resolved);
+    setUrlInput(TAB_URLS[resolved] || 'https://youtube.com/video/apparat-songc');
+  };
+
+  const handleNewBrowserTab = () => {
+    if (!tabs.includes('Google')) {
+      setTabs((prev) => [...prev, 'Google']);
+    }
+    setWindowTab('chrome', 'Google');
+    setUrlInput(TAB_URLS.Google);
+    setMenuOpen(false);
   };
 
   const handleGoogleSubmit = (e) => {
     e.preventDefault();
     const q = googleQuery.trim().toLowerCase();
     if (!q) return;
-    if (q.includes('journal') || q.includes('flying') || q.includes('lucian')) {
-      switchTab('Journal');
-    } else if (q.includes('hacker') || q.includes('hn') || q.includes('news')) {
-      switchTab('Hacker News');
-    } else if (q.includes('subreply') || q.includes('social')) {
-      switchTab('Subreply');
+    if (q.includes('journal') || q.includes('flying') || q.includes('lucian') || q.includes('youtube')) {
+      switchTab('YouTube');
+    } else if (q.includes('reddit') || q.includes('hacker') || q.includes('news')) {
+      switchTab('Reddit');
+    } else if (q.includes('facebook') || q.includes('subreply') || q.includes('social')) {
+      switchTab('Facebook');
     } else {
-      switchTab('Hacker News');
+      switchTab('Reddit');
     }
   };
 
   const handleUrlSubmit = (e) => {
     e.preventDefault();
     const val = urlInput.toLowerCase();
-    if (val.includes('subreply')) switchTab('Subreply');
-    else if (val.includes('ycombinator') || val.includes('news')) switchTab('Hacker News');
-    else if (val.includes('lucianmarin') || val.includes('journal') || val.includes('youtube')) switchTab('Journal');
-    else switchTab('Google');
+    if (val.includes('subreply') || val.includes('facebook')) switchTab('Facebook');
+    else if (val.includes('ycombinator') || val.includes('news') || val.includes('reddit')) switchTab('Reddit');
+    else if (val.includes('google')) switchTab('Google');
+    else switchTab('YouTube');
   };
 
   const handleAddSubreply = (e) => {
@@ -146,240 +160,187 @@ export default function BrowserApp() {
     setNewSubreply('');
   };
 
-  const tabOrder = ['Google', 'Subreply', 'Hacker News', 'Journal'];
-
   return (
-    <WindowFrame appId="chrome" minWidth={420} minHeight={300}>
+    <WindowFrame appId="chrome" minWidth={440} minHeight={300}>
       <div className="moss-browser-window">
-        {/* V2 Chromeless Blue Header or V1 Classic Slate Tab Header */}
-        {!isV1Look ? (
-          <div
-            className="moss-v2-header moss-chrome-header"
-            onDoubleClick={() => minimizeWindow('chrome', 'switcher')}
-          >
-            <div className="moss-v2-header-left">
-              <span className="moss-v2-app-logo">
-                <ChromeIcon size={21} strokeWidth={2} />
-              </span>
-              <div className="moss-v2-tabs" data-no-drag="true">
-                {tabOrder.map((tab) => (
-                  <button
-                    key={tab}
-                    className={`moss-v2-tab ${activeTab === tab ? 'is-active' : ''}`}
-                    onClick={() => switchTab(tab)}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="moss-v2-header-actions" data-no-drag="true">
+        {/* V1 Browser Top Header Bar with draggable bar space and _ / + / Cube controls */}
+        <div
+          className="moss-v1-browser-top"
+          onDoubleClick={() => minimizeWindow('chrome', 'switcher')}
+        >
+          <div className="moss-v1-browser-left">
+            <div className="moss-v1-nav-arrows">
               <button
-                className="moss-win-action-btn moss-minimize-btn"
-                onClick={() => minimizeWindow('chrome', 'switcher')}
-                title="Minimize Chrome to Top Stack"
-              >
-                <span className="moss-min-line" />
-              </button>
-              <button
-                className="moss-win-action-btn"
-                onClick={() => closeWindow('chrome')}
-                title="Close Chrome"
-              >
-                <CircleCloseIcon
-                  size={20}
-                  variant={shellMode === 'basic' ? 'square' : 'circle'}
-                />
-              </button>
-            </div>
-          </div>
-        ) : (
-          /* V1 Browser Header (from moss-v1-browser.jpg & moss-v1-laptop.jpg) */
-          <div
-            className="moss-v1-browser-top"
-            onDoubleClick={() => minimizeWindow('chrome', 'dock')}
-          >
-            <div className="moss-v1-nav-arrows" data-no-drag="true">
-              <button onClick={() => switchTab('Google')} title="Back">←</button>
-              <button onClick={() => switchTab('Journal')} title="Forward">→</button>
-            </div>
-            <div className="moss-v1-tabs" data-no-drag="true">
-              {[
-                { label: 'YouTube', target: 'Journal' },
-                { label: 'Facebook', target: 'Subreply' },
-                { label: 'Reddit', target: 'Hacker News' }
-              ].map((t) => (
-                <button
-                  key={t.label}
-                  className={`moss-v1-tab ${activeTab === t.target ? 'is-active' : ''}`}
-                  onClick={() => switchTab(t.target)}
-                >
-                  {t.label}
-                </button>
-              ))}
-            </div>
-            <button
-              className="moss-v1-cube-btn"
-              data-no-drag="true"
-              onClick={() => setV1ChromeStyle(false)}
-              title="Switch to Moss V2 Blue Header"
-            >
-              <CubeV1Icon size={20} />
-            </button>
-          </div>
-        )}
-
-        {/* Sub-toolbar / Address Bar */}
-        {!isV1Look ? (
-          <div className="moss-chrome-toolbar" data-no-drag="true">
-            <form className="moss-url-form" onSubmit={handleUrlSubmit}>
-              <svg className="moss-url-search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
-                <circle cx="11" cy="11" r="7.5" />
-                <line x1="20" y1="20" x2="16.35" y2="16.35" />
-              </svg>
-              <input
-                type="text"
-                value={urlInput}
-                onChange={(e) => setUrlInput(e.target.value)}
-                className="moss-url-input"
-                aria-label="Browser URL"
-              />
-            </form>
-
-            <div className="moss-toolbar-controls">
-              <button
+                className="moss-v1-arrow-back"
                 onClick={() => {
-                  const idx = tabOrder.indexOf(activeTab);
-                  const prev = tabOrder[(idx - 1 + tabOrder.length) % tabOrder.length];
+                  const idx = tabs.indexOf(activeTab);
+                  const prev = tabs[(idx - 1 + tabs.length) % tabs.length] || 'YouTube';
                   switchTab(prev);
                 }}
-                title="Previous Tab"
+                title="Back"
               >
                 ←
               </button>
               <button
+                className="moss-v1-arrow-fwd"
                 onClick={() => {
-                  const idx = tabOrder.indexOf(activeTab);
-                  const next = tabOrder[(idx + 1) % tabOrder.length];
+                  const idx = tabs.indexOf(activeTab);
+                  const next = tabs[(idx + 1) % tabs.length] || 'YouTube';
                   switchTab(next);
                 }}
-                title="Next Tab"
+                title="Forward"
               >
                 →
               </button>
-              <button
-                onClick={() => setMenuOpen((v) => !v)}
-                title="Browser Options & V1/V2 Chrome Toggle"
-              >
-                ☰
-              </button>
             </div>
 
-            {menuOpen && (
-              <div className="moss-browser-dropdown">
+            <div className="moss-v1-tabs">
+              {tabs.map((tab) => (
                 <button
-                  onClick={() => {
-                    setV1ChromeStyle((v) => !v);
-                    setMenuOpen(false);
-                  }}
+                  key={tab}
+                  className={`moss-v1-tab ${activeTab === tab ? 'is-active' : ''}`}
+                  onClick={() => switchTab(tab)}
                 >
-                  {isV1Look ? 'Use Moss V2 Header' : 'Use Moss V1 Classic Header'}
+                  {tab}
                 </button>
-                <button
-                  onClick={() => {
-                    switchTab('Journal');
-                    setMenuOpen(false);
-                  }}
-                >
-                  Open Lucian Marin Journal (V1)
-                </button>
-                <button
-                  onClick={() => {
-                    openWindow('code', { source: 'switcher' });
-                    setMenuOpen(false);
-                  }}
-                >
-                  Inspect Source in Code Editor
-                </button>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="moss-v1-address-bar" data-no-drag="true">
-            <div className="moss-v1-url-box">
-              <span className="moss-v1-https">https://</span>
-              <span className="moss-v1-url-rest">lucianmarin.com/archive/design-the-flying-car</span>
-              <span className="moss-v1-tag-icon">🏷</span>
-            </div>
-            <div className="moss-v1-bookmarks">
-              <button onClick={() => switchTab('Journal')}>Bookmarks ▾</button>
-              <button onClick={() => switchTab('Hacker News')}>News ▾</button>
-              <button onClick={() => switchTab('Subreply')}>Family ▾</button>
-              <button onClick={() => openWindow('twitter')}>Social ▾</button>
-              <button onClick={() => switchTab('Google')}>Later</button>
+              ))}
             </div>
           </div>
-        )}
+
+          <div className="moss-code-header-right">
+            <button
+              className="moss-code-plusminus"
+              onClick={() => minimizeWindow('chrome', 'switcher')}
+              title="Minimize Chrome (_)"
+            >
+              _
+            </button>
+            <button
+              className="moss-code-plusminus"
+              onClick={handleNewBrowserTab}
+              title="New Tab (+)"
+            >
+              +
+            </button>
+            <button
+              className="moss-v1-cube-btn"
+              onClick={() => setMenuOpen((v) => !v)}
+              title="Browser Menu"
+            >
+              <CubeV1Icon size={20} />
+            </button>
+          </div>
+
+          {menuOpen && (
+            <div className="moss-v1-code-dropdown" data-no-drag="true">
+              <button onClick={handleNewBrowserTab}>New</button>
+              <button
+                onClick={() => {
+                  switchTab('Facebook');
+                  setMenuOpen(false);
+                }}
+              >
+                Share
+              </button>
+              <button
+                onClick={() => {
+                  openWindow('settings', { source: 'switcher' });
+                  setMenuOpen(false);
+                }}
+              >
+                Settings
+              </button>
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  closeWindow('chrome');
+                }}
+              >
+                Quit
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Exact moss-v1-browser.jpg Address & Bookmarks Bar */}
+        <div className="moss-v1-address-bar">
+          <form className="moss-v1-url-box" onSubmit={handleUrlSubmit}>
+            <span className="moss-v1-https">https://</span>
+            <input
+              type="text"
+              value={urlInput.replace(/^https?:\/\//, '')}
+              onChange={(e) => setUrlInput(`https://${e.target.value}`)}
+              className="moss-v1-url-input"
+              aria-label="Browser URL"
+            />
+            <span className="moss-v1-tag-icon" title="Tag Page">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                <circle cx="7" cy="7" r="1.5" />
+              </svg>
+            </span>
+          </form>
+
+          <div className="moss-v1-bookmarks">
+            <button onClick={() => switchTab('YouTube')}>
+              Bookmarks <span className="moss-v1-caret">▾</span>
+            </button>
+            <button onClick={() => switchTab('Reddit')}>
+              News <span className="moss-v1-caret">▾</span>
+            </button>
+            <button onClick={() => switchTab('Facebook')}>
+              Family <span className="moss-v1-caret">▾</span>
+            </button>
+            <button onClick={() => openWindow('twitter')}>
+              Social <span className="moss-v1-caret">▾</span>
+            </button>
+            <button onClick={() => switchTab('Google')}>Later</button>
+          </div>
+        </div>
 
         {/* Browser Body Content */}
         <div className="moss-browser-content" data-no-drag="true">
-          {activeTab === 'Google' && (
-            <div className="moss-google-page">
-              <div className="moss-google-top-icons">
-                <button
-                  className="moss-google-icon-btn"
-                  onClick={() => openWindow('finder', { source: 'switcher' })}
-                  title="Moss Apps Grid"
-                >
-                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
-                    <rect x="3" y="3" width="7" height="7" rx="1" />
-                    <rect x="14" y="3" width="7" height="7" rx="1" />
-                    <rect x="3" y="14" width="7" height="7" rx="1" />
-                    <rect x="14" y="14" width="7" height="7" rx="1" />
-                  </svg>
-                </button>
-                <button
-                  className="moss-google-icon-btn"
-                  onClick={() => switchTab('Subreply')}
-                  title="Profile & Recent Activity"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
-                    <circle cx="10" cy="8" r="4" />
-                    <path d="M3 20c0-3.5 3.2-6 7-6" />
-                    <circle cx="17.5" cy="16.5" r="4" />
-                    <polyline points="17.5 14.5 17.5 16.5 19 17.5" />
-                  </svg>
-                </button>
+          {(activeTab === 'YouTube' || activeTab === 'Journal') && (
+            /* Exact recreation of moss-v1-browser.jpg Journal Page */
+            <div className="moss-v1-journal-page">
+              <nav className="moss-journal-nav">
+                {['Journal', 'Archive', 'Links', 'Work', 'Themes', 'About'].map((sec) => (
+                  <button
+                    key={sec}
+                    className={`moss-journal-nav-item ${journalSection === sec ? 'is-active' : ''}`}
+                    onClick={() => setJournalSection(sec)}
+                  >
+                    {sec}
+                  </button>
+                ))}
+              </nav>
+
+              <div className="moss-journal-hero">
+                <h1>{journalSection}</h1>
               </div>
 
-              <div className="moss-google-center">
-                <h1 className="moss-google-logo" aria-label="Google">
-                  <span style={{ color: '#2b84f3' }}>G</span>
-                  <span style={{ color: '#ea4335' }}>o</span>
-                  <span style={{ color: '#fbbc05' }}>o</span>
-                  <span style={{ color: '#2b84f3' }}>g</span>
-                  <span style={{ color: '#34a853' }}>l</span>
-                  <span style={{ color: '#ea4335' }}>e</span>
-                </h1>
-
-                <form onSubmit={handleGoogleSubmit} className="moss-google-search-wrap">
-                  <input
-                    type="text"
-                    value={googleQuery}
-                    onChange={(e) => setGoogleQuery(e.target.value)}
-                    placeholder=""
-                    className="moss-google-pill-input"
-                    aria-label="Search Google"
-                  />
-                </form>
-              </div>
-
-              <div className="moss-google-footer">2022 Google, Inc.</div>
+              <article className="moss-journal-article">
+                <h2>Design the Flying Car</h2>
+                <div className="moss-journal-date">
+                  <span>1 NOV 2012</span>
+                  <span>5:00 PM</span>
+                </div>
+                <p>
+                  I could be a high school math teacher, I could be working for Intel, I could be
+                  doing research on electronic components and so on... but life made me chose a
+                  different path: crafting digital interfaces that strip away visual noise until only
+                  human intent remains.
+                </p>
+                <p>
+                  In Moss OS, the operating system steps back. Windows carry their own identity in a
+                  single header strip, minimized tasks fold cleanly into a spatial corner stack, and
+                  ambient audio lives right on the canvas.
+                </p>
+              </article>
             </div>
           )}
 
-          {activeTab === 'Subreply' && (
+          {activeTab === 'Facebook' && (
             <div className="moss-subreply-page">
               <div className="moss-subreply-header">
                 <div>
@@ -418,7 +379,7 @@ export default function BrowserApp() {
             </div>
           )}
 
-          {activeTab === 'Hacker News' && (
+          {activeTab === 'Reddit' && (
             <div className="moss-hn-page">
               <div className="moss-hn-banner">
                 <span className="moss-hn-y">Y</span>
@@ -461,43 +422,58 @@ export default function BrowserApp() {
             </div>
           )}
 
-          {activeTab === 'Journal' && (
-            /* Exact recreation of moss-v1-browser.jpg & moss-v1-laptop.jpg */
-            <div className="moss-v1-journal-page">
-              <nav className="moss-journal-nav">
-                {['Journal', 'Archive', 'Links', 'Work', 'Themes', 'About'].map((sec) => (
-                  <button
-                    key={sec}
-                    className={`moss-journal-nav-item ${journalSection === sec ? 'is-active' : ''}`}
-                    onClick={() => setJournalSection(sec)}
-                  >
-                    {sec}
-                  </button>
-                ))}
-              </nav>
-
-              <div className="moss-journal-hero">
-                <h1>{journalSection}</h1>
+          {activeTab === 'Google' && (
+            <div className="moss-google-page">
+              <div className="moss-google-top-icons">
+                <button
+                  className="moss-google-icon-btn"
+                  onClick={() => openWindow('finder', { source: 'switcher' })}
+                  title="Moss Apps Grid"
+                >
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                    <rect x="14" y="14" width="7" height="7" rx="1" />
+                  </svg>
+                </button>
+                <button
+                  className="moss-google-icon-btn"
+                  onClick={() => switchTab('Facebook')}
+                  title="Profile & Recent Activity"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+                    <circle cx="10" cy="8" r="4" />
+                    <path d="M3 20c0-3.5 3.2-6 7-6" />
+                    <circle cx="17.5" cy="16.5" r="4" />
+                    <polyline points="17.5 14.5 17.5 16.5 19 17.5" />
+                  </svg>
+                </button>
               </div>
 
-              <article className="moss-journal-article">
-                <h2>Design the Flying Car</h2>
-                <div className="moss-journal-date">
-                  <span>1 NOV 2012</span>
-                  <span>5:00 PM</span>
-                </div>
-                <p>
-                  I could be a high school math teacher, I could be working for Intel, I could be
-                  doing research on electronic components and so on... but life made me chose a
-                  different path: crafting digital interfaces that strip away visual noise until only
-                  human intent remains.
-                </p>
-                <p>
-                  In Moss OS, the operating system steps back. Windows carry their own identity in a
-                  single header strip, minimized tasks fold cleanly into a spatial corner stack, and
-                  ambient audio lives right on the canvas.
-                </p>
-              </article>
+              <div className="moss-google-center">
+                <h1 className="moss-google-logo" aria-label="Google">
+                  <span style={{ color: '#2b84f3' }}>G</span>
+                  <span style={{ color: '#ea4335' }}>o</span>
+                  <span style={{ color: '#fbbc05' }}>o</span>
+                  <span style={{ color: '#2b84f3' }}>g</span>
+                  <span style={{ color: '#34a853' }}>l</span>
+                  <span style={{ color: '#ea4335' }}>e</span>
+                </h1>
+
+                <form onSubmit={handleGoogleSubmit} className="moss-google-search-wrap">
+                  <input
+                    type="text"
+                    value={googleQuery}
+                    onChange={(e) => setGoogleQuery(e.target.value)}
+                    placeholder=""
+                    className="moss-google-pill-input"
+                    aria-label="Search Google"
+                  />
+                </form>
+              </div>
+
+              <div className="moss-google-footer">2022 Google, Inc.</div>
             </div>
           )}
         </div>

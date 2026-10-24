@@ -111,7 +111,7 @@ export default function TwitterApp() {
             <div className="moss-twitter-trends" data-no-drag="true">
               <div className="moss-trend-title">Trending in Design & HCI</div>
               {[
-                { tag: '#MossOS', count: '2.4k tweets', desc: 'Chromeless V2 window headers' },
+                { tag: '#MossOS', count: '2.4k tweets', desc: 'Experimental OS UI/UX design' },
                 { tag: '#Subreply', count: '940 tweets', desc: 'Minimalist text social network' },
                 { tag: '#FlyingCar', count: '610 tweets', desc: 'Lucian Marin Journal essay' },
                 { tag: '#Chilltrax', count: '420 tweets', desc: 'Now streaming in Moss Media Player' }

@@ -72,8 +72,8 @@ const INITIAL_WINDOWS = {
     animPhase: 'idle',
     animVector: { dx: -60, dy: -40 },
     zIndex: 24,
-    rect: { x: 76, y: 260, width: 545, height: 405 },
-    activeTab: 'Google'
+    rect: { x: 76, y: 250, width: 575, height: 415 },
+    activeTab: 'YouTube'
   },
   whatsapp: {
     id: 'whatsapp',
