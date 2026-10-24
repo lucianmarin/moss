@@ -238,7 +238,9 @@ export default function SettingsApp() {
                     checked={showDualPlayer}
                     onChange={(e) => setShowDualPlayer(e.target.checked)}
                   />
-                  <span>Show Dual V1 Media Player Bars (Castanets + Caribou)</span>
+                  <span>
+                    Dark Mode for Music Player ({showDualPlayer ? 'Dark — Caribou / Gold' : 'Light — Castanets / Ice-Blue'})
+                  </span>
                 </label>
               </div>
             </div>

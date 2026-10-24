@@ -188,6 +188,58 @@ export function OSProvider({ children }) {
 
   const currentTrack = tracks[currentTrackIndex] || tracks[0];
 
+  // Poll live song metadata from the Chilltrax stream (ICY metadata + station info)
+  const fetchStreamMetadata = useCallback(async () => {
+    try {
+      let data = null;
+      const res = await fetch(`/api/stream-meta?t=${Date.now()}`, { cache: 'no-store' }).catch(
+        () => null
+      );
+      if (res && res.ok) {
+        const json = await res.json().catch(() => null);
+        if (json && json.ok && json.artist && json.title) {
+          data = json;
+        }
+      }
+
+      if (!data) {
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(
+          'https://www.chilltrax.com/php/GetSongInformationNew.php'
+        )}&t=${Date.now()}`;
+        const fallbackRes = await fetch(proxyUrl, { cache: 'no-store' }).catch(() => null);
+        if (fallbackRes && fallbackRes.ok) {
+          const info = await fallbackRes.json().catch(() => null);
+          if (info && info.artist && info.title) {
+            data = {
+              artist: info.artist,
+              title: info.title,
+              cover: null
+            };
+          }
+        }
+      }
+
+      if (data && data.artist && data.title) {
+        setTracks((prev) =>
+          prev.map((t) => ({
+            ...t,
+            artist: data.artist,
+            title: data.title,
+            cover: data.cover || t.cover || null
+          }))
+        );
+      }
+    } catch {
+      // Ignore transient network errors
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchStreamMetadata();
+    const interval = setInterval(fetchStreamMetadata, 15000);
+    return () => clearInterval(interval);
+  }, [fetchStreamMetadata]);
+
   // Sync volume with HTML5 audio element
   useEffect(() => {
     if (audioRef.current) {
@@ -202,6 +254,7 @@ export function OSProvider({ children }) {
       audio.pause();
       setIsPlaying(false);
     } else {
+      fetchStreamMetadata();
       try {
         await audio.play();
         setIsPlaying(true);
@@ -209,7 +262,7 @@ export function OSProvider({ children }) {
         setIsPlaying(false);
       }
     }
-  }, [isPlaying]);
+  }, [isPlaying, fetchStreamMetadata]);
 
   const selectTrack = useCallback(async (index, autoPlay = true) => {
     const nextIdx = (index + tracks.length) % tracks.length;
