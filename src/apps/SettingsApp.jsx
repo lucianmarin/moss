@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import WindowFrame from '../components/WindowFrame';
 import { useOS } from '../context/OSContext';
-import { BadgeSquareIcon, CircleCloseIcon } from '../components/MossIcons';
+import { SettingsGearIcon } from '../components/MossIcons';
 
 export default function SettingsApp() {
   const {
@@ -11,8 +11,6 @@ export default function SettingsApp() {
     setWallpaper,
     animationStyle,
     setAnimationStyle,
-    showV1Hud,
-    setShowV1Hud,
     showDualPlayer,
     setShowDualPlayer,
     volume,
@@ -26,50 +24,94 @@ export default function SettingsApp() {
 
   const win = windows.settings;
   const activeTab = win?.activeTab || 'Appearance';
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const settingsTabs = ['Appearance', 'Interaction & Physics', 'Audio & V1'];
 
   return (
     <WindowFrame appId="settings" minWidth={440} minHeight={320}>
       <div className="moss-settings-window">
+        {/* V1 Header Bar matching Chrome and Code apps */}
         <div
-          className="moss-v2-header moss-settings-header"
+          className="moss-code-header"
           onDoubleClick={() => minimizeWindow('settings', 'switcher')}
         >
-          <div className="moss-v2-header-left">
-            <span className="moss-v2-app-logo">
-              <BadgeSquareIcon label="OS" size={20} />
-            </span>
-            <div className="moss-v2-tabs" data-no-drag="true">
-              {['Appearance', 'Interaction & Physics', 'Audio & V1'].map((tab) => (
-                <button
-                  key={tab}
-                  className={`moss-v2-tab ${activeTab === tab ? 'is-active' : ''}`}
-                  onClick={() => setWindowTab('settings', tab)}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
+          <div className="moss-code-tabs">
+            {settingsTabs.map((tab) => (
+              <button
+                key={tab}
+                className={`moss-code-tab ${activeTab === tab ? 'is-active' : ''}`}
+                onClick={() => setWindowTab('settings', tab)}
+              >
+                {tab}
+              </button>
+            ))}
           </div>
 
-          <div className="moss-v2-header-actions" data-no-drag="true">
+          <div className="moss-code-header-right">
             <button
-              className="moss-win-action-btn moss-minimize-btn"
+              className="moss-code-plusminus"
               onClick={() => minimizeWindow('settings', 'switcher')}
-              title="Minimize Settings"
+              title="Minimize Settings (_)"
             >
-              <span className="moss-min-line" />
+              _
             </button>
             <button
-              className="moss-win-action-btn"
-              onClick={() => closeWindow('settings')}
-              title="Close Settings"
+              className="moss-code-plusminus"
+              onClick={() => {
+                const idx = settingsTabs.indexOf(activeTab);
+                const next = settingsTabs[(idx + 1) % settingsTabs.length];
+                setWindowTab('settings', next);
+              }}
+              title="Next Settings Tab (+)"
             >
-              <CircleCloseIcon
-                size={20}
-                variant={shellMode === 'basic' ? 'square' : 'circle'}
-              />
+              +
+            </button>
+            <button
+              className={`moss-code-blue-btn ${menuOpen ? 'is-open' : ''}`}
+              onClick={() => setMenuOpen((v) => !v)}
+              title="Settings Menu (New, Share, Settings, Quit)"
+            >
+              <SettingsGearIcon size={18} strokeWidth={2} />
             </button>
           </div>
+
+          {menuOpen && (
+            <div className="moss-v1-code-dropdown" data-no-drag="true">
+              <button
+                onClick={() => {
+                  setWindowTab('settings', 'Appearance');
+                  setMenuOpen(false);
+                }}
+              >
+                New
+              </button>
+              <button
+                onClick={() => {
+                  setWindowTab('settings', 'Interaction & Physics');
+                  setMenuOpen(false);
+                }}
+              >
+                Share
+              </button>
+              <button
+                onClick={() => {
+                  setWindowTab('settings', 'Audio & V1');
+                  setMenuOpen(false);
+                }}
+              >
+                Settings
+              </button>
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  closeWindow('settings');
+                }}
+              >
+                Quit
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="moss-settings-body" data-no-drag="true">

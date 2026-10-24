@@ -1731,6 +1731,11 @@ button {
   display: flex;
   align-items: stretch;
   justify-content: space-between;
+  cursor: grab;
+}
+
+.moss-code-header:active {
+  cursor: grabbing;
 }
 
 .moss-code-tabs {

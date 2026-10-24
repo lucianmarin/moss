@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import WindowFrame from '../components/WindowFrame';
 import { useOS } from '../context/OSContext';
 import { DESIGN_GALLERY } from '../assets/mediaAssets';
-import { DriveTriangleIcon, CircleCloseIcon } from '../components/MossIcons';
+import { DriveTriangleIcon } from '../components/MossIcons';
 
 export default function FinderApp() {
   const {
     windows,
-    shellMode,
     codeFiles,
     tracks,
     setWindowTab,
@@ -20,54 +19,98 @@ export default function FinderApp() {
   const win = windows.finder;
   const activeTab = win?.activeTab || 'design';
   const [selectedDesign, setSelectedDesign] = useState(DESIGN_GALLERY[0]);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const finderTabs = [
+    { id: 'design', label: 'design/' },
+    { id: 'music', label: 'music/' },
+    { id: 'code', label: 'src/code/' }
+  ];
 
   return (
     <WindowFrame appId="finder" minWidth={450} minHeight={310}>
       <div className="moss-finder-window">
+        {/* V1 Header Bar matching Chrome and Code apps */}
         <div
-          className="moss-v2-header moss-finder-header"
+          className="moss-code-header"
           onDoubleClick={() => minimizeWindow('finder', 'switcher')}
         >
-          <div className="moss-v2-header-left">
-            <span className="moss-v2-app-logo">
-              <DriveTriangleIcon size={20} strokeWidth={2} />
-            </span>
-            <div className="moss-v2-tabs" data-no-drag="true">
-              {[
-                { id: 'design', label: 'design/' },
-                { id: 'music', label: 'music/' },
-                { id: 'code', label: 'src/code/' }
-              ].map((t) => (
-                <button
-                  key={t.id}
-                  className={`moss-v2-tab ${activeTab === t.id ? 'is-active' : ''}`}
-                  onClick={() => setWindowTab('finder', t.id)}
-                >
-                  {t.label}
-                </button>
-              ))}
-            </div>
+          <div className="moss-code-tabs">
+            {finderTabs.map((t) => (
+              <button
+                key={t.id}
+                className={`moss-code-tab ${activeTab === t.id ? 'is-active' : ''}`}
+                onClick={() => setWindowTab('finder', t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
           </div>
 
-          <div className="moss-v2-header-actions" data-no-drag="true">
+          <div className="moss-code-header-right">
             <button
-              className="moss-win-action-btn moss-minimize-btn"
+              className="moss-code-plusminus"
               onClick={() => minimizeWindow('finder', 'switcher')}
-              title="Minimize Finder to Top Stack"
+              title="Minimize Finder (_)"
             >
-              <span className="moss-min-line" />
+              _
             </button>
             <button
-              className="moss-win-action-btn"
-              onClick={() => closeWindow('finder')}
-              title="Close Finder"
+              className="moss-code-plusminus"
+              onClick={() => {
+                const idx = finderTabs.findIndex((t) => t.id === activeTab);
+                const next = finderTabs[(idx + 1) % finderTabs.length];
+                setWindowTab('finder', next.id);
+              }}
+              title="Next Folder Tab (+)"
             >
-              <CircleCloseIcon
-                size={20}
-                variant={shellMode === 'basic' ? 'square' : 'circle'}
-              />
+              +
+            </button>
+            <button
+              className={`moss-code-blue-btn ${menuOpen ? 'is-open' : ''}`}
+              onClick={() => setMenuOpen((v) => !v)}
+              title="Finder Menu (New, Share, Settings, Quit)"
+            >
+              <DriveTriangleIcon size={18} strokeWidth={2} />
             </button>
           </div>
+
+          {menuOpen && (
+            <div className="moss-v1-code-dropdown" data-no-drag="true">
+              <button
+                onClick={() => {
+                  setWindowTab('finder', 'design');
+                  setMenuOpen(false);
+                }}
+              >
+                New
+              </button>
+              <button
+                onClick={() => {
+                  setWindowTab('finder', 'music');
+                  setMenuOpen(false);
+                }}
+              >
+                Share
+              </button>
+              <button
+                onClick={() => {
+                  openWindow('settings', { source: 'switcher' });
+                  setMenuOpen(false);
+                }}
+              >
+                Settings
+              </button>
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  closeWindow('finder');
+                }}
+              >
+                Quit
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="moss-finder-body" data-no-drag="true">
