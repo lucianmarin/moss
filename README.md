@@ -1,4 +1,7 @@
 # Moss
+
+![screenshot](screenshot.jpg)
+
 **Experimental Operating System UI/UX Design & Human–Computer Interaction Prototype**
 
 Moss is a next-generation desktop operating system concept designed by Lucian Marin. It reimagines how windows, navigation chrome, system docks, and ambient media coexist on a clutter-free spatial canvas. Built with **React** and **Vite**, this interactive environment unifies the **Moss V2** design language (primary experience) with all iconic applications and HUD paradigms from **Moss V1**.
