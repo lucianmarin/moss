@@ -53,29 +53,65 @@ const INITIAL_CONVERSATIONS = {
       avatar: AVATAR_MAN,
       text: 'Yes! And clicking the Media Player streams Chilltrax live radio right on the desktop.'
     }
+  ],
+  Lucian: [
+    {
+      id: 'l1',
+      side: 'left',
+      author: 'lucianmarin',
+      time: '5m',
+      avatar: AVATAR_MAN,
+      text: 'Testing the unified gray and black window controls across horizontal and vertical tabbed apps.'
+    }
   ]
 };
 
+const DEFAULT_TABS = ['Mike', 'Trisha', 'Contacts'];
+const EXTRA_TABS = ['Lucian'];
+const ALL_TABS_ORDER = ['Mike', 'Trisha', 'Contacts', 'Lucian'];
+
 const CONTACTS_LIST = [
-  { name: 'Mike', role: 'Product & Systems Design', status: 'Online', avatar: AVATAR_WOMAN },
-  { name: 'Trisha', role: 'HCI Research Lead', status: 'Listening to Chilltrax', avatar: AVATAR_TRISHA },
-  { name: 'Lucian Marin', role: 'Creator of Moss', status: 'Designing V2', avatar: AVATAR_MAN }
+  { name: 'Mike', tab: 'Mike', role: 'Product & Systems Design', status: 'Online', avatar: AVATAR_WOMAN },
+  { name: 'Trisha', tab: 'Trisha', role: 'HCI Research Lead', status: 'Listening to Chilltrax', avatar: AVATAR_TRISHA },
+  { name: 'Lucian Marin', tab: 'Lucian', role: 'Creator of Moss', status: 'Designing V2', avatar: AVATAR_MAN }
 ];
 
 export default function WhatsAppApp() {
   const {
     windows,
     setWindowTab,
-    minimizeWindow,
-    closeWindow
+    minimizeWindow
   } = useOS();
 
   const win = windows.whatsapp;
   const activeTab = win?.activeTab || 'Mike';
 
+  const [tabs, setTabs] = useState(DEFAULT_TABS);
   const [conversations, setConversations] = useState(INITIAL_CONVERSATIONS);
   const [draft, setDraft] = useState('');
   const listRef = useRef(null);
+
+  const switchTab = (tabName) => {
+    if (!tabs.includes(tabName)) {
+      setTabs((prev) => [...prev, tabName]);
+    }
+    setWindowTab('whatsapp', tabName);
+  };
+
+  const handleNewWhatsAppTab = () => {
+    const nextToOpen =
+      EXTRA_TABS.find((t) => !tabs.includes(t)) ||
+      ALL_TABS_ORDER.find((t) => !tabs.includes(t));
+
+    if (nextToOpen) {
+      setTabs((prev) => [...prev, nextToOpen]);
+      setWindowTab('whatsapp', nextToOpen);
+    } else {
+      const idx = tabs.indexOf(activeTab);
+      const nextFallback = tabs[(idx + 1) % tabs.length] || 'Mike';
+      setWindowTab('whatsapp', nextFallback);
+    }
+  };
 
   useEffect(() => {
     if (listRef.current) {
@@ -87,7 +123,7 @@ export default function WhatsAppApp() {
     e.preventDefault();
     const text = draft.trim();
     if (!text) return;
-    const chatKey = activeTab === 'Trisha' ? 'Trisha' : 'Mike';
+    const chatKey = conversations[activeTab] ? activeTab : 'Mike';
 
     const userMsg = {
       id: `u-${Date.now()}`,
@@ -105,8 +141,10 @@ export default function WhatsAppApp() {
     setDraft('');
 
     setTimeout(() => {
-      const replyAvatar = chatKey === 'Trisha' ? AVATAR_TRISHA : AVATAR_WOMAN;
-      const replyAuthor = chatKey === 'Trisha' ? 'trisha' : 'mike';
+      const replyAvatar =
+        chatKey === 'Trisha' ? AVATAR_TRISHA : chatKey === 'Lucian' ? AVATAR_MAN : AVATAR_WOMAN;
+      const replyAuthor =
+        chatKey === 'Trisha' ? 'trisha' : chatKey === 'Lucian' ? 'lucianmarin' : 'mike';
       const replies = [
         'Love how clean the vertical 90-degree rail tabs look in WhatsApp.',
         'The V1 vertical rail keeps all conversation names right along the left edge.',
@@ -138,12 +176,12 @@ export default function WhatsAppApp() {
           className="moss-whatsapp-rail"
           onDoubleClick={() => minimizeWindow('whatsapp', 'switcher')}
         >
-          <div className="moss-whatsapp-rail-tabs" data-no-drag="true">
-            {['Mike', 'Trisha', 'Contacts'].map((tab) => (
+          <div className="moss-whatsapp-rail-tabs">
+            {tabs.map((tab) => (
               <button
                 key={tab}
                 className={`moss-whatsapp-rail-btn ${activeTab === tab ? 'is-active' : ''}`}
-                onClick={() => setWindowTab('whatsapp', tab)}
+                onClick={() => switchTab(tab)}
                 title={tab}
               >
                 <span className="moss-whatsapp-rotated-label">{tab}</span>
@@ -154,12 +192,15 @@ export default function WhatsAppApp() {
           <div className="moss-twitter-rail-bottom" data-no-drag="true">
             <button
               onClick={() => minimizeWindow('whatsapp', 'switcher')}
-              title="Minimize WhatsApp"
+              title="Minimize WhatsApp (_)"
             >
-              —
+              _
             </button>
-            <button onClick={() => closeWindow('whatsapp')} title="Close WhatsApp">
-              ×
+            <button
+              onClick={handleNewWhatsAppTab}
+              title="New Tab (+)"
+            >
+              +
             </button>
           </div>
         </aside>
@@ -197,11 +238,12 @@ export default function WhatsAppApp() {
                 <button
                   type="button"
                   className="moss-wa-attach-btn"
-                  onClick={() => setDraft((d) => `${d} [moss-v2-spec.png] `.trimStart())}
-                  title="Attach File"
+                  onClick={() => setDraft((d) => `${d} [photo.jpg] `.trimStart())}
+                  title="Send Photo"
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                    <circle cx="12" cy="13" r="4" />
                   </svg>
                 </button>
                 <input
@@ -219,7 +261,7 @@ export default function WhatsAppApp() {
                 <div
                   key={c.name}
                   className="moss-wa-contact-card"
-                  onClick={() => setWindowTab('whatsapp', c.name === 'Trisha' ? 'Trisha' : 'Mike')}
+                  onClick={() => switchTab(c.tab || 'Mike')}
                 >
                   <img src={c.avatar} alt={c.name} className="moss-wa-avatar" />
                   <div>

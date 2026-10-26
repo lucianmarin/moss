@@ -132,9 +132,9 @@ export default function PlayerApp() {
             </button>
             <button
               onClick={() => minimizeWindow('player', 'switcher')}
-              title="Minimize Player"
+              title="Minimize Player (_)"
             >
-              —
+              _
             </button>
             <button onClick={() => closeWindow('player')} title="Close Player">
               ×

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import WindowFrame from '../components/WindowFrame';
 import { useOS } from '../context/OSContext';
-import { CubeV1Icon } from '../components/MossIcons';
+import { ChromeIcon, ArrowBackIcon, ArrowForwardIcon } from '../components/MossIcons';
 
 const TAB_CONFIG = {
   News: {
@@ -35,24 +35,13 @@ const ALL_TABS_ORDER = ['News', 'Math', 'Zero', 'Lucian', 'Subreply'];
 const DEFAULT_TABS = ['News', 'Math', 'Zero'];
 const EXTRA_TABS = ['Lucian', 'Subreply'];
 
-const BOOKMARK_FOLDERS = {
-  News: [
-    { label: 'news.lucianmarin.com', url: 'https://news.lucianmarin.com', tab: 'News' },
-    { label: 'subreply.com/trending', url: 'https://subreply.com/trending', tab: 'Subreply' },
-    { label: 'lucianmarin.com', url: 'https://lucianmarin.com', tab: 'Lucian' }
-  ],
-  Family: [
-    { label: 'math.lucianmarin.com', url: 'https://math.lucianmarin.com', tab: 'Math' },
-    { label: 'zero.lucianmarin.com', url: 'https://zero.lucianmarin.com', tab: 'Zero' },
-    { label: 'lucianmarin.com', url: 'https://lucianmarin.com', tab: 'Lucian' }
-  ],
-  Social: [
-    { label: 'subreply.com/trending', url: 'https://subreply.com/trending', tab: 'Subreply' },
-    { label: 'lucianmarin.com', url: 'https://lucianmarin.com', tab: 'Lucian' },
-    { label: 'news.lucianmarin.com', url: 'https://news.lucianmarin.com', tab: 'News' },
-    { label: 'zero.lucianmarin.com', url: 'https://zero.lucianmarin.com', tab: 'Zero' }
-  ]
-};
+const BOOKMARKS_LIST = [
+  { label: 'news.lucianmarin.com', url: 'https://news.lucianmarin.com', tab: 'News' },
+  { label: 'math.lucianmarin.com', url: 'https://math.lucianmarin.com', tab: 'Math' },
+  { label: 'zero.lucianmarin.com', url: 'https://zero.lucianmarin.com', tab: 'Zero' },
+  { label: 'lucianmarin.com', url: 'https://lucianmarin.com', tab: 'Lucian' },
+  { label: 'subreply.com/trending', url: 'https://subreply.com/trending', tab: 'Subreply' }
+];
 
 export default function BrowserApp() {
   const {
@@ -151,37 +140,12 @@ export default function BrowserApp() {
   return (
     <WindowFrame appId="chrome" minWidth={440} minHeight={300}>
       <div className="moss-browser-window">
-        {/* V1 Browser Top Header Bar with draggable bar space and _ / + / Cube controls */}
+        {/* V1 Browser Top Header Bar with draggable bar space and _ / + / Chrome controls */}
         <div
           className="moss-v1-browser-top"
           onDoubleClick={() => minimizeWindow('chrome', 'switcher')}
         >
           <div className="moss-v1-browser-left">
-            <div className="moss-v1-nav-arrows">
-              <button
-                className="moss-v1-arrow-back"
-                onClick={() => {
-                  const idx = tabs.indexOf(activeTab);
-                  const prev = tabs[(idx - 1 + tabs.length) % tabs.length] || 'News';
-                  switchTab(prev);
-                }}
-                title="Back"
-              >
-                ←
-              </button>
-              <button
-                className="moss-v1-arrow-fwd"
-                onClick={() => {
-                  const idx = tabs.indexOf(activeTab);
-                  const next = tabs[(idx + 1) % tabs.length] || 'News';
-                  switchTab(next);
-                }}
-                title="Forward"
-              >
-                →
-              </button>
-            </div>
-
             <div className="moss-v1-tabs">
               {tabs.map((tab) => (
                 <button
@@ -215,7 +179,7 @@ export default function BrowserApp() {
               onClick={() => setMenuOpen((v) => !v)}
               title="Browser Menu"
             >
-              <CubeV1Icon size={20} />
+              <ChromeIcon size={19} strokeWidth={2} />
             </button>
           </div>
 
@@ -252,6 +216,31 @@ export default function BrowserApp() {
 
         {/* Address & Bookmarks Bar */}
         <div className="moss-v1-address-bar">
+          <div className="moss-v1-nav-arrows" data-no-drag="true">
+            <button
+              className="moss-v1-arrow-back"
+              onClick={() => {
+                const idx = tabs.indexOf(activeTab);
+                const prev = tabs[(idx - 1 + tabs.length) % tabs.length] || 'News';
+                switchTab(prev);
+              }}
+              title="Back"
+            >
+              <ArrowBackIcon size={15} />
+            </button>
+            <button
+              className="moss-v1-arrow-fwd"
+              onClick={() => {
+                const idx = tabs.indexOf(activeTab);
+                const next = tabs[(idx + 1) % tabs.length] || 'News';
+                switchTab(next);
+              }}
+              title="Forward"
+            >
+              <ArrowForwardIcon size={15} />
+            </button>
+          </div>
+
           <form className="moss-v1-url-box" onSubmit={handleUrlSubmit}>
             <span className="moss-v1-https">https://</span>
             <input
@@ -270,45 +259,35 @@ export default function BrowserApp() {
           </form>
 
           <div className="moss-v1-bookmarks" data-no-drag="true">
-            {['News', 'Family', 'Social'].map((folder) => (
-              <div key={folder} className="moss-v1-bookmark-folder">
-                <button
-                  type="button"
-                  className={openBookmarkFolder === folder ? 'is-open' : ''}
-                  onClick={() =>
-                    setOpenBookmarkFolder((prev) => (prev === folder ? null : folder))
-                  }
-                  onMouseEnter={() => openBookmarkFolder && setOpenBookmarkFolder(folder)}
-                >
-                  {folder} <span className="moss-v1-caret">▾</span>
-                </button>
-                {openBookmarkFolder === folder && (
-                  <div className="moss-v1-bookmark-dropdown">
-                    {BOOKMARK_FOLDERS[folder].map((item) => (
-                      <button
-                        key={item.label}
-                        type="button"
-                        onClick={() => {
-                          switchTab(item.tab, item.url);
-                          setOpenBookmarkFolder(null);
-                        }}
-                      >
-                        {item.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={() => {
-                setOpenBookmarkFolder(null);
-                switchTab('Lucian');
-              }}
-            >
-              Later
-            </button>
+            <div className="moss-v1-bookmark-folder">
+              <button
+                type="button"
+                className={openBookmarkFolder === 'Bookmarks' ? 'is-open' : ''}
+                onClick={() =>
+                  setOpenBookmarkFolder((prev) =>
+                    prev === 'Bookmarks' ? null : 'Bookmarks'
+                  )
+                }
+              >
+                Bookmarks <span className="moss-v1-caret">▾</span>
+              </button>
+              {openBookmarkFolder === 'Bookmarks' && (
+                <div className="moss-v1-bookmark-dropdown">
+                  {BOOKMARKS_LIST.map((item) => (
+                    <button
+                      key={item.label}
+                      type="button"
+                      onClick={() => {
+                        switchTab(item.tab, item.url);
+                        setOpenBookmarkFolder(null);
+                      }}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
