@@ -25,8 +25,8 @@ export default function SpatialOverview() {
           </div>
           <div className="moss-overview-presets">
             {[
-              { id: 'advanced', label: 'Advanced (Top bar)' },
-              { id: 'basic', label: 'Basic (Dock)' }
+              { id: 'basic', label: 'Basic (Dock)' },
+              { id: 'advanced', label: 'Advanced (Top bar)' }
             ].map((p) => (
               <button
                 key={p.id}

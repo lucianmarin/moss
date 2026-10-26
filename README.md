@@ -20,9 +20,9 @@ Moss is a next-generation desktop operating system concept designed by Lucian Ma
      - **Finder & Settings**: `#2c2c2e` / `#3a3a3c` (Neutral Graphite)
    - Active tabs display bold typography with a crisp bottom indicator bar (`3px` white or cyan underline) directly inside the window header.
 
-2. **Two Distinct UI Modes (`Advanced` & `Basic`) with Unified V1 + V2 Workspace**
+2. **Two Distinct UI Modes (`Basic` & `Advanced`) with Unified V1 + V2 Workspace**
+   - **Basic Mode (Left Side Floating Dock — Default)**: Features the vertical floating dock (`#e0e0e0`) on the left side (`moss-v2-dock.jpg`) containing all V1 & V2 app icons and hover labels, integrated volume flyout, workspace layer toggle, and stacked vertical clock (`19` / `20`).
    - **Advanced Mode (Top Bar + Drop-Down App Switcher)**: Features the top system bar (`⚡` launcher, focused app title, dynamic context menus, volume control flyout, workspace overview, notifications, and `19:42` clock) paired with a top-left drop-down App Switcher stack displaying all V1 & V2 apps (`Chrome`, `Player`, `WhatsApp`, `Code`, `Twitter`, `Finder`, `Settings`) with their icons and names.
-   - **Basic Mode (Left Side Floating Dock)**: Features the vertical floating dock (`#e0e0e0`) on the left side (`moss-v2-dock.jpg`) containing all V1 & V2 app icons and hover labels, integrated volume flyout, workspace layer toggle, and stacked vertical clock (`19` / `20`).
    - **Default Wallpaper**: Boots into **Alpine Mist** (`v1-mountain`) by default, with `Neutral Gray (#808080)`, `Deep Moss Slate`, and `Carbon Studio` selectable in Settings.
 
 3. **Physics-Driven Window Lifecycle Animations**

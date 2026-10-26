@@ -108,20 +108,20 @@ export default function SettingsApp() {
             <div className="moss-settings-section">
               <h3>UI Mode</h3>
               <p className="moss-settings-hint">
-                Switch between Advanced mode (Top bar with drop-down app switcher) and Basic mode
-                (Left side floating dock).
+                Switch between Basic mode (Left side floating dock) and Advanced mode
+                (Top bar with drop-down app switcher).
               </p>
               <div className="moss-preset-grid">
                 {[
                   {
-                    id: 'advanced',
-                    title: 'Advanced (Top bar)',
-                    desc: 'Top menu bar with drop-down app switcher stack'
-                  },
-                  {
                     id: 'basic',
                     title: 'Basic (Dock)',
                     desc: 'Floating left-side vertical dock with app icons and labels'
+                  },
+                  {
+                    id: 'advanced',
+                    title: 'Advanced (Top bar)',
+                    desc: 'Top menu bar with drop-down app switcher stack'
                   }
                 ].map((p) => (
                   <button

@@ -2648,12 +2648,52 @@ button {
     max-width: 310px;
   }
 
-  /* Basic Dock positioned on the right on mobile */
+  /* Basic Dock positioned on the right on mobile, split into top (clock/status) and bottom (apps) panels */
   .moss-v2-left-dock {
     left: auto;
-    right: 6px;
-    max-height: calc(100vh - 12px);
-    max-height: calc(100dvh - 12px);
+    right: 0;
+    top: 0;
+    bottom: 0;
+    transform: none;
+    height: 100vh;
+    height: 100dvh;
+    max-height: none;
+    padding: 0;
+    gap: 0;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-radius: 0;
+    box-shadow: none;
+    flex-direction: column-reverse;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+
+  .moss-dock-footer {
+    width: 100%;
+    background: rgba(217, 217, 217, 0.8);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 0 0 0 8px;
+    padding: 10px 0;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    pointer-events: auto;
+  }
+
+  .moss-dock-clock-row {
+    order: -1;
+  }
+
+  .moss-dock-apps {
+    width: 100%;
+    background: rgba(217, 217, 217, 0.8);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 8px 0 0 0;
+    padding: 10px 0 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    pointer-events: auto;
   }
 
   .moss-dock-tooltip {
@@ -2679,7 +2719,8 @@ button {
   .moss-notifications-popover.moss-dock-notifications-popover {
     left: auto;
     right: 54px;
-    bottom: 0;
+    top: 6px;
+    bottom: auto;
     width: calc(100vw - 68px);
     max-width: 300px;
   }
@@ -2687,7 +2728,8 @@ button {
   .moss-dock-popup {
     left: auto;
     right: 54px;
-    bottom: 0;
+    top: 6px;
+    bottom: auto;
     max-width: calc(100vw - 68px);
   }
 
@@ -2700,7 +2742,7 @@ button {
   }
 
   .moss-desktop.mode-basic .moss-window-wrapper {
-    width: calc(100% - 54px) !important;
+    width: calc(100% - 48px) !important;
     height: 100% !important;
   }
 
@@ -2744,7 +2786,31 @@ button {
     cursor: default;
   }
 
-  /* Responsive App Headers & Content */
+  /* Responsive App Headers & Content: Title bar at the very bottom, address/toolbar above it */
+  .moss-browser-window,
+  .moss-code-window,
+  .moss-finder-window,
+  .moss-settings-window {
+    flex-direction: column-reverse;
+  }
+
+  .moss-v1-code-dropdown {
+    top: auto;
+    bottom: 44px;
+    box-shadow: -4px -10px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  .moss-v1-bookmark-dropdown {
+    top: auto;
+    bottom: calc(100% + 10px);
+    box-shadow: 0 -10px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  .moss-browser-dropdown {
+    top: auto;
+    bottom: 38px;
+  }
+
   .moss-v1-browser-left {
     flex: 1;
     min-width: 0;

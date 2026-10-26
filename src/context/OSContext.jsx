@@ -134,8 +134,8 @@ const INITIAL_WINDOWS = {
 export function OSProvider({ children }) {
   const [windows, setWindows] = useState(INITIAL_WINDOWS);
   const [focusedApp, setFocusedApp] = useState('chrome');
-  // Two UI modes: 'advanced' (Top bar + drop down app switcher) and 'basic' (Left side dock)
-  const [shellMode, setShellMode] = useState('advanced'); // 'advanced' | 'basic'
+  // Two UI modes: 'basic' (Left side dock, default) and 'advanced' (Top bar + drop down app switcher)
+  const [shellMode, setShellMode] = useState('basic'); // 'basic' | 'advanced'
   const [wallpaper, setWallpaper] = useState('v1-mountain'); // Default: Alpine Mist ('v1-mountain')
   const [animationStyle, setAnimationStyle] = useState('spring-morph'); // 'spring-morph' | 'genie-fold' | 'quantum-snap'
   const [switcherOpen, setSwitcherOpen] = useState(false);
@@ -533,14 +533,14 @@ export function OSProvider({ children }) {
     }));
   }, []);
 
-  // Switch between the two UI modes: 'advanced' (Top bar + drop down switcher) and 'basic' (Left side dock)
+  // Switch between the two UI modes: 'basic' (Left side dock) and 'advanced' (Top bar + drop down switcher)
   const applyWorkspacePreset = useCallback((mode) => {
     setOverviewOpen(false);
     setSwitcherOpen(false);
-    if (mode === 'basic') {
-      setShellMode('basic');
-    } else {
+    if (mode === 'advanced') {
       setShellMode('advanced');
+    } else {
+      setShellMode('basic');
     }
   }, []);
 

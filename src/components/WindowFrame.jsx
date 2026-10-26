@@ -282,7 +282,7 @@ export default function WindowFrame({
     ? {
         left: '0px',
         top: '0px',
-        width: shellMode === 'basic' ? 'calc(100% - 54px)' : '100%',
+        width: shellMode === 'basic' ? 'calc(100% - 48px)' : '100%',
         height: isPlayer ? 'auto' : shellMode === 'advanced' ? 'calc(100% - 36px)' : '100%',
         zIndex: win.zIndex,
         '--origin-dx': `${win.animVector?.dx || -140}px`,
