@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import WindowFrame from '../components/WindowFrame';
 import { useOS } from '../context/OSContext';
+import { WhatsAppIcon } from '../components/MossIcons';
 
 const AVATAR_WOMAN =
   'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=140&auto=format&fit=crop&q=80';
@@ -8,6 +9,10 @@ const AVATAR_MAN =
   'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=140&auto=format&fit=crop&q=80';
 const AVATAR_TRISHA =
   'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=140&auto=format&fit=crop&q=80';
+const AVATAR_ELENA =
+  'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=140&auto=format&fit=crop&q=80';
+const AVATAR_ALEX =
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=140&auto=format&fit=crop&q=80';
 
 const INITIAL_CONVERSATIONS = {
   Mike: [
@@ -63,17 +68,39 @@ const INITIAL_CONVERSATIONS = {
       avatar: AVATAR_MAN,
       text: 'Testing the unified gray and black window controls across horizontal and vertical tabbed apps.'
     }
+  ],
+  Elena: [
+    {
+      id: 'e1',
+      side: 'left',
+      author: 'elena',
+      time: '28m',
+      avatar: AVATAR_ELENA,
+      text: 'The new spatial dock and top bar presets switch seamlessly.'
+    }
+  ],
+  Alex: [
+    {
+      id: 'a1',
+      side: 'left',
+      author: 'alex',
+      time: '1h',
+      avatar: AVATAR_ALEX,
+      text: 'Chilltrax stream metadata polling is locked in and running smoothly.'
+    }
   ]
 };
 
-const DEFAULT_TABS = ['Mike', 'Trisha', 'Contacts'];
-const EXTRA_TABS = ['Lucian'];
-const ALL_TABS_ORDER = ['Mike', 'Trisha', 'Contacts', 'Lucian'];
+const DEFAULT_TABS = ['Mike', 'Trisha'];
+const EXTRA_TABS = ['Lucian', 'Elena', 'Alex'];
+const ALL_TABS_ORDER = ['Mike', 'Trisha', 'Lucian', 'Elena', 'Alex'];
 
 const CONTACTS_LIST = [
   { name: 'Mike', tab: 'Mike', role: 'Product & Systems Design', status: 'Online', avatar: AVATAR_WOMAN },
   { name: 'Trisha', tab: 'Trisha', role: 'HCI Research Lead', status: 'Listening to Chilltrax', avatar: AVATAR_TRISHA },
-  { name: 'Lucian Marin', tab: 'Lucian', role: 'Creator of Moss', status: 'Designing V2', avatar: AVATAR_MAN }
+  { name: 'Lucian Marin', tab: 'Lucian', role: 'Creator of Moss', status: 'Designing V2', avatar: AVATAR_MAN },
+  { name: 'Elena Vance', tab: 'Elena', role: 'Spatial UI Architect', status: 'Online', avatar: AVATAR_ELENA },
+  { name: 'Alex Rivera', tab: 'Alex', role: 'Audio Systems Engineer', status: 'Streaming Chilltrax', avatar: AVATAR_ALEX }
 ];
 
 export default function WhatsAppApp() {
@@ -141,10 +168,9 @@ export default function WhatsAppApp() {
     setDraft('');
 
     setTimeout(() => {
-      const replyAvatar =
-        chatKey === 'Trisha' ? AVATAR_TRISHA : chatKey === 'Lucian' ? AVATAR_MAN : AVATAR_WOMAN;
-      const replyAuthor =
-        chatKey === 'Trisha' ? 'trisha' : chatKey === 'Lucian' ? 'lucianmarin' : 'mike';
+      const contact = CONTACTS_LIST.find((c) => c.tab === chatKey);
+      const replyAvatar = contact?.avatar || AVATAR_WOMAN;
+      const replyAuthor = chatKey.toLowerCase();
       const replies = [
         'Love how clean the vertical 90-degree rail tabs look in WhatsApp.',
         'The V1 vertical rail keeps all conversation names right along the left edge.',
@@ -168,15 +194,34 @@ export default function WhatsAppApp() {
     }, 650);
   };
 
+  const openedContacts = tabs.map(
+    (tabName) =>
+      CONTACTS_LIST.find((c) => c.tab === tabName) || {
+        name: tabName,
+        tab: tabName,
+        role: 'Contact',
+        status: 'Online',
+        avatar: AVATAR_WOMAN
+      }
+  );
+  const availableContacts = CONTACTS_LIST.filter((c) => !tabs.includes(c.tab));
+
   return (
     <WindowFrame appId="whatsapp" minWidth={290} minHeight={300}>
       <div className="moss-v1-whatsapp-window">
-        {/* Left Vertical Rail like Twitter in moss-v1-twitter.jpg with conversation names rotated 90 degrees */}
+        {/* Left Vertical Rail like Twitter in moss-v1-twitter.jpg with WhatsApp icon on top and conversation names rotated 90 degrees */}
         <aside
           className="moss-whatsapp-rail"
           onDoubleClick={() => minimizeWindow('whatsapp', 'switcher')}
         >
           <div className="moss-whatsapp-rail-tabs">
+            <button
+              className={`moss-whatsapp-rail-btn moss-whatsapp-rail-icon-btn ${activeTab === 'Chats' ? 'is-active' : ''}`}
+              onClick={() => setWindowTab('whatsapp', 'Chats')}
+              title="WhatsApp Chats & Contacts"
+            >
+              <WhatsAppIcon size={20} />
+            </button>
             {tabs.map((tab) => (
               <button
                 key={tab}
@@ -208,10 +253,10 @@ export default function WhatsAppApp() {
         {/* Right Conversation Column */}
         <div className="moss-whatsapp-main">
           <div className="moss-whatsapp-subheader">
-            {activeTab === 'Contacts' ? '3 Contacts Online' : 'Today'}
+            {activeTab === 'Chats' ? `${openedContacts.length} Opened · ${availableContacts.length} Available` : 'Today'}
           </div>
 
-          {activeTab !== 'Contacts' ? (
+          {activeTab !== 'Chats' ? (
             <>
               <div className="moss-whatsapp-messages" ref={listRef} data-no-drag="true">
                 {(conversations[activeTab] || conversations.Mike).map((msg) => (
@@ -257,20 +302,51 @@ export default function WhatsAppApp() {
             </>
           ) : (
             <div className="moss-whatsapp-contacts" data-no-drag="true">
-              {CONTACTS_LIST.map((c) => (
-                <div
-                  key={c.name}
-                  className="moss-wa-contact-card"
-                  onClick={() => switchTab(c.tab || 'Mike')}
-                >
-                  <img src={c.avatar} alt={c.name} className="moss-wa-avatar" />
-                  <div>
-                    <strong>{c.name}</strong>
-                    <div>{c.role}</div>
-                    <span className="moss-wa-status">{c.status}</span>
+              <div className="moss-wa-section-title">Opened Conversations</div>
+              {openedContacts.map((c) => {
+                const msgs = conversations[c.tab] || [];
+                const lastMsg = msgs[msgs.length - 1];
+                return (
+                  <div
+                    key={c.tab}
+                    className="moss-wa-contact-card"
+                    onClick={() => switchTab(c.tab)}
+                  >
+                    <img src={c.avatar} alt={c.name} className="moss-wa-avatar" />
+                    <div className="moss-wa-contact-info">
+                      <div className="moss-wa-contact-top">
+                        <strong>{c.name}</strong>
+                        {lastMsg && <span className="moss-wa-time">{lastMsg.time}</span>}
+                      </div>
+                      <div className="moss-wa-last-msg">
+                        {lastMsg ? lastMsg.text : c.role}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
+
+              {availableContacts.length > 0 && (
+                <>
+                  <div className="moss-wa-section-title">Other Contacts</div>
+                  {availableContacts.map((c) => (
+                    <div
+                      key={c.tab}
+                      className="moss-wa-contact-card"
+                      onClick={() => switchTab(c.tab)}
+                    >
+                      <img src={c.avatar} alt={c.name} className="moss-wa-avatar" />
+                      <div className="moss-wa-contact-info">
+                        <div className="moss-wa-contact-top">
+                          <strong>{c.name}</strong>
+                          <span className="moss-wa-status">{c.status}</span>
+                        </div>
+                        <div className="moss-wa-last-msg">{c.role}</div>
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
           )}
         </div>
